@@ -4,25 +4,25 @@ import { debounce } from "./lib/utils";
 import { createDataCache, FetchOptions } from "./lib/dataCache";
 import {ChangeEvent, useEffect} from "react";
 
-// Person type definition
-export type Person = {
+// Product type definition
+export type Product = {
     id: number;
-    first_name: string;
-    last_name: string;
-    email: string;
-    gender: string;
-    ip_address: string;
+    name: string;
+    category: string;
+    price: number;
+    stock: number;
+    description: string;
 };
 
-// Response type for Person data
-export type PersonResponse = {
+// Response type for Product data
+export type ProductResponse = {
     first: number;
     prev: number;
     next: number;
     last: number;
     pages: number;
     items: number;
-    data: Person[];
+    data: Product[];
 }
 
 // Use FetchOptions from dataCache
@@ -30,99 +30,28 @@ export type Options = FetchOptions;
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 
-// Create a person-specific data cache
-const personCache = createDataCache<PersonResponse>(baseApiUrl, 'users', 'first_name');
+// Create a product-specific data cache
+const productCache = createDataCache<ProductResponse>(baseApiUrl, 'products', 'name');
 
-// Function to fetch users using the generic cache
-export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
-    return personCache.fetchData(options);
+// Function to fetch products using the generic cache
+export const fetchProducts = async (options: Options): Promise<ProductResponse> => {
+    return productCache.fetchData(options);
 };
 
 // Function to prefetch adjacent pages
 export const prefetchAdjacentPages = (currentOptions: Options) => {
-    personCache.prefetchAdjacentPages(currentOptions);
+    productCache.prefetchAdjacentPages(currentOptions);
 };
 
 // Function to prefetch initial data
 export const prefetchInitialData = () => {
-    return personCache.prefetchInitialData({
-        sorting: [{ id: 'first_name', desc: false }]
+    return productCache.prefetchInitialData({
+        sorting: [{ id: 'name', desc: false }]
     });
 };
 
-// Define columns for Person data
-export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
-    {
-        accessorKey: 'first_name',
-        header: 'First Name',
-        enableSorting: true,
-        cell: info => info.getValue(),
-        meta: {
-            filterComponent: (column: any) => (
-                <input
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
-        }
-    },
-    {
-        accessorKey: 'last_name',
-        header: 'Last Name',
-        enableSorting: true,
-        cell: info => info.getValue(),
-        meta: {
-            filterComponent: (column: any) => (
-                <input
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
-        }
-    },
-    {
-        accessorKey: 'email',
-        header: 'Email',
-        cell: info => info.getValue(),
-        meta: {
-            filterComponent: (column: any) => (
-                <input
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
-        }
-    },
-    {
-        accessorKey: 'gender',
-        header: 'Gender',
-        cell: info => info.getValue(),
-        meta: {
-            filterComponent: (column: any) => (
-                <input
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
-        }
-    },
-    {
-        accessorKey: 'ip_address',
-        header: 'IP Address',
-        cell: info => info.getValue(),
-        meta: {
-            filterComponent: (column: any) => (
-                <input
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
-        }
-    }
-];
-
 // Initial empty response
-export const initialPersonResponse: PersonResponse = {
+export const initialProductResponse: ProductResponse = {
     data: [],
     pages: 0,
     items: 0,
@@ -132,8 +61,81 @@ export const initialPersonResponse: PersonResponse = {
     last: 0
 };
 
-// PersonTable component that uses the generic DataTable
-export const PersonTable = ({
+// Define columns for Product data
+export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
+    {
+        accessorKey: 'name',
+        header: 'Product Name',
+        enableSorting: true,
+        cell: info => info.getValue(),
+        meta: {
+            filterComponent: (column: any) => (
+                <input 
+                    type="search"
+                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+                />
+            )
+        }
+    },
+    {
+        accessorKey: 'category',
+        header: 'Category',
+        enableSorting: true,
+        cell: info => info.getValue(),
+        meta: {
+            filterComponent: (column: any) => (
+                <input 
+                    type="search"
+                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+                />
+            )
+        }
+    },
+    {
+        accessorKey: 'price',
+        header: 'Price',
+        enableSorting: true,
+        cell: info => `$${info.getValue()}`,
+        meta: {
+            filterComponent: (column: any) => (
+                <input 
+                    type="number"
+                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+                />
+            )
+        }
+    },
+    {
+        accessorKey: 'stock',
+        header: 'Stock',
+        enableSorting: true,
+        cell: info => info.getValue(),
+        meta: {
+            filterComponent: (column: any) => (
+                <input 
+                    type="number"
+                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+                />
+            )
+        }
+    },
+    {
+        accessorKey: 'description',
+        header: 'Description',
+        cell: info => info.getValue(),
+        meta: {
+            filterComponent: (column: any) => (
+                <input 
+                    type="search"
+                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+                />
+            )
+        }
+    }
+];
+
+// ProductTable component that uses the generic DataTable
+export const ProductTable = ({
     getData,
     options,
     onPaginationChange,
@@ -143,7 +145,7 @@ export const PersonTable = ({
     features,
     children
 }: {
-    getData: Promise<PersonResponse>,
+    getData: Promise<ProductResponse>,
     options?: Options,
     onSortingChange?: OnChangeFn<SortingState>,
     onPaginationChange?: OnChangeFn<PaginationState>,
@@ -166,17 +168,17 @@ export const PersonTable = ({
             const timeoutId = setTimeout(() => {
                 prefetchAdjacentPages(options);
             }, 100);
-
+            
             return () => clearTimeout(timeoutId);
         }
     }, [options?.pagination?.pageIndex]);
 
     return (
-        <DataTable<Person, PersonResponse>
+        <DataTable<Product, ProductResponse>
             getData={getData}
-            columns={personColumns}
+            columns={productColumns}
             options={options}
-            initialData={initialPersonResponse}
+            initialData={initialProductResponse}
             onPaginationChange={onPaginationChange}
             onSortingChange={onSortingChange}
             onGlobalFilterChange={onGlobalFilterChange}
@@ -184,7 +186,7 @@ export const PersonTable = ({
             getRowData={(response) => response.data}
             getRowCount={(response) => response.items}
             getPageCount={(response) => response.pages}
-            fetchDataFn={fetchUsers}
+            fetchDataFn={fetchProducts}
             features={features}
         >
             {children}
@@ -192,4 +194,4 @@ export const PersonTable = ({
     );
 };
 
-export default PersonTable;
+export default ProductTable;
