@@ -92,6 +92,10 @@ table {
 			td {
 				border-bottom: 1px solid #ccc;
 				text-align: start;
+				max-width: 25vw;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
 			}
 		}
 	}
