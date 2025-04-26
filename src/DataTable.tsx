@@ -17,6 +17,16 @@ export type TableOptions = {
     globalFilter?: string;
 };
 
+// Feature flags for DataTable
+export type DataTableFeatures = {
+    enableSorting?: boolean;
+    enablePagination?: boolean;
+    enableGlobalFilter?: boolean;
+    enableColumnFilters?: boolean;
+    initialPageSize?: number;
+    initialSorting?: SortingState;
+};
+
 // Generic DataTable component
 export function DataTable<TData, TResponse>({
     getData,
@@ -29,11 +39,20 @@ export function DataTable<TData, TResponse>({
     onColumnFiltersChange,
     getRowData,
     getRowCount,
-    getPageCount
+    getPageCount,
+    fetchDataFn,
+    features = {
+        enableSorting: true,
+        enablePagination: true,
+        enableGlobalFilter: true,
+        enableColumnFilters: true,
+        initialPageSize: 10,
+        initialSorting: []
+    }
 }: {
     getData: Promise<TResponse>;
     columns: ColumnDef<TData, { filterComponent: any }>[];
-    options: TableOptions;
+    options?: TableOptions;
     initialData: TResponse;
     onPaginationChange?: OnChangeFn<PaginationState>;
     onSortingChange?: OnChangeFn<SortingState>;
@@ -42,6 +61,8 @@ export function DataTable<TData, TResponse>({
     getRowData: (response: TResponse) => TData[];
     getRowCount: (response: TResponse) => number;
     getPageCount: (response: TResponse) => number;
+    fetchDataFn?: (options: TableOptions) => Promise<TResponse>;
+    features?: DataTableFeatures;
 }) {
     // Use transition to avoid showing the Suspense fallback during transitions
     const [isPending, startTransition] = useTransition();
@@ -49,12 +70,70 @@ export function DataTable<TData, TResponse>({
     // Keep track of the latest data
     const [currentData, setCurrentData] = useState<TResponse>(initialData);
 
-    // Keep a reference to the latest options to use in effects
-    const latestOptionsRef = useRef(options);
-    latestOptionsRef.current = options;
+    // Internal state management for table features
+    const [pagination, setPagination] = useState<PaginationState>(options?.pagination || {
+        pageIndex: 0,
+        pageSize: features.initialPageSize || 10
+    });
+    const [sorting, setSorting] = useState<SortingState>(options?.sorting || features.initialSorting || []);
+    const [globalFilter, setGlobalFilter] = useState<string>(options?.globalFilter || '');
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(options?.columnFilters || []);
 
-    // Extract options for table state
-    const { pagination, sorting, globalFilter, columnFilters } = options;
+    // Create a TableOptions object from internal state
+    const internalOptions = {
+        pagination,
+        sorting,
+        globalFilter,
+        columnFilters
+    };
+
+    // Use provided options or internal state
+    const tableOptions = options || internalOptions;
+
+    // Keep a reference to the latest options to use in effects
+    const latestOptionsRef = useRef(tableOptions);
+    latestOptionsRef.current = tableOptions;
+
+    // Function to get current data based on internal state
+    const getCurrentData = () => {
+        if (fetchDataFn && !options) {
+            return fetchDataFn(internalOptions);
+        }
+        return getData;
+    };
+
+    // Handle internal state changes
+    const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
+        const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
+        setPagination(newPagination);
+        if (onPaginationChange) {
+            onPaginationChange(newPagination);
+        }
+    };
+
+    const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
+        const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
+        setSorting(newSorting);
+        if (onSortingChange) {
+            onSortingChange(newSorting);
+        }
+    };
+
+    const handleGlobalFilterChange: OnChangeFn<string> = (updater) => {
+        const newGlobalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
+        setGlobalFilter(newGlobalFilter);
+        if (onGlobalFilterChange) {
+            onGlobalFilterChange(newGlobalFilter);
+        }
+    };
+
+    const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updater) => {
+        const newColumnFilters = typeof updater === 'function' ? updater(columnFilters) : updater;
+        setColumnFilters(newColumnFilters);
+        if (onColumnFiltersChange) {
+            onColumnFiltersChange(newColumnFilters);
+        }
+    };
 
     // Use effect to fetch data and update state
     useEffect(() => {
@@ -64,7 +143,8 @@ export function DataTable<TData, TResponse>({
             try {
                 // Start transition to mark this update as non-urgent
                 startTransition(async () => {
-                    const result = await getData;
+                    const dataPromise = getCurrentData();
+                    const result = await dataPromise;
                     if (isMounted) {
                         setCurrentData(result);
                     }
@@ -79,7 +159,7 @@ export function DataTable<TData, TResponse>({
         return () => {
             isMounted = false;
         };
-    }, [getData]);
+    }, [options, pagination, sorting, globalFilter, columnFilters]);
 
     // Apply deferred value to the current data to avoid flickering
     const deferredData = useDeferredValue(currentData);
@@ -96,24 +176,52 @@ export function DataTable<TData, TResponse>({
         manualPagination: true,
         manualSorting: true,
         manualFiltering: true,
-        enableGlobalFilter: true,
+        enableGlobalFilter: features.enableGlobalFilter,
+        enableSorting: features.enableSorting,
+        enableFilters: features.enableColumnFilters,
         maxMultiSortColCount: 3,
         rowCount: rowCount,
         pageCount: pageCount,
         state: {
-            pagination,
-            sorting,
-            globalFilter,
-            columnFilters,
+            pagination: options?.pagination || pagination,
+            sorting: options?.sorting || sorting,
+            globalFilter: options?.globalFilter || globalFilter,
+            columnFilters: options?.columnFilters || columnFilters,
         },
-        onPaginationChange,
-        onSortingChange,
-        onGlobalFilterChange,
-        onColumnFiltersChange,
+        onPaginationChange: options ? onPaginationChange : handlePaginationChange,
+        onSortingChange: options ? onSortingChange : handleSortingChange,
+        onGlobalFilterChange: options ? onGlobalFilterChange : handleGlobalFilterChange,
+        onColumnFiltersChange: options ? onColumnFiltersChange : handleColumnFiltersChange,
     });
 
     return (
         <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
+            {features.enableGlobalFilter && (
+                <div style={{ marginBottom: '1rem' }}>
+                    <input
+                        placeholder="Search..."
+                        type="search"
+                        value={options?.globalFilter || globalFilter}
+                        onChange={e => {
+                            const value = e.target.value;
+                            if (options) {
+                                if (onGlobalFilterChange) {
+                                    onGlobalFilterChange(value);
+                                }
+                            } else {
+                                handleGlobalFilterChange(value);
+                            }
+                        }}
+                        style={{
+                            padding: '0.5rem',
+                            borderRadius: '4px',
+                            border: '1px solid #ccc',
+                            width: '100%',
+                            maxWidth: '300px'
+                        }}
+                    />
+                </div>
+            )}
             <table>
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
@@ -173,30 +281,32 @@ export function DataTable<TData, TResponse>({
                         </tr>
                     ))}
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colSpan={columns.length}>
-                            <button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
-                                {'<<'}
-                            </button>
-                            <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                {'<'}
-                            </button>
-                            <span>
-                                page {table.getState().pagination.pageIndex + 1} of {pageCount} pages, total items {rowCount}
-                            </span>
-                            <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                {'>'}
-                            </button>
-                            <button
-                                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                                disabled={!table.getCanNextPage()}
-                            >
-                                {'>>'}
-                            </button>
-                        </td>
-                    </tr>
-                </tfoot>
+                {features.enablePagination && (
+                    <tfoot>
+                        <tr>
+                            <td colSpan={columns.length}>
+                                <button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                                    {'<<'}
+                                </button>
+                                <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                                    {'<'}
+                                </button>
+                                <span>
+                                    page {table.getState().pagination.pageIndex + 1} of {pageCount} pages, total items {rowCount}
+                                </span>
+                                <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                                    {'>'}
+                                </button>
+                                <button
+                                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                    disabled={!table.getCanNextPage()}
+                                >
+                                    {'>>'}
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                )}
             </table>
         </div>
     );

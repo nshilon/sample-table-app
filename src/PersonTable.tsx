@@ -37,11 +37,11 @@ const dataCache = new Map<string, Promise<PersonResponse>>();
 
 // Helper to generate a cache key from options
 export const getCacheKey = (options: Options): string => {
-    const sortKey = options.sorting ? options.sorting.map(s => `${s.id}:${s.desc}`).join(',') : '';
-    const pageKey = options.pagination ? `page=${options.pagination.pageIndex},size=${options.pagination.pageSize}` : '';
+    const sortKey = options.sorting && options.sorting.length > 0 ? options.sorting.map(s => `${s.id}:${s.desc}`).join(',') : '';
+    const pageKey = options.pagination ? `page=${options.pagination.pageIndex},size=${options.pagination.pageSize}` : 'page=0,size=10';
     const filterKey = options.globalFilter || '';
-    const columnFilterKey = options.columnFilters ? options.columnFilters.map(f => `${f.id}:${f.value}`).join(',') : '';
-    
+    const columnFilterKey = options.columnFilters && options.columnFilters.length > 0 ? options.columnFilters.map(f => `${f.id}:${f.value}`).join(',') : '';
+
     return `${sortKey}|${pageKey}|${filterKey}|${columnFilterKey}`;
 };
 
@@ -51,7 +51,7 @@ const baseApiUrl = import.meta.env.VITE_API_URL
 export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
     // Generate cache key
     const cacheKey = getCacheKey(options);
-    
+
     // Check if we have cached data
     if (dataCache.has(cacheKey)) {
         return dataCache.get(cacheKey)!;
@@ -60,7 +60,7 @@ export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
 
     let url = `${baseApiUrl}/users?`;
 
-    if (options.sorting) {
+    if (options.sorting && options.sorting.length > 0) {
         if (!url.endsWith('?')) {
             url += '&';
         }
@@ -72,6 +72,12 @@ export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
             url += '&';
         }
         url += `_page=${options.pagination.pageIndex + 1}&_per_page=${options.pagination.pageSize}`;
+    } else {
+        // Default pagination if not provided
+        if (!url.endsWith('?')) {
+            url += '&';
+        }
+        url += `_page=1&_per_page=10`;
     }
 
     if (options.globalFilter) {
@@ -81,7 +87,7 @@ export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
         url += `first_name=${options.globalFilter}`;
     }
 
-    if (options.columnFilters) {
+    if (options.columnFilters && options.columnFilters.length > 0) {
         if (!url.endsWith('?')) {
             url += '&';
         }
@@ -91,19 +97,19 @@ export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
 
     // Create the promise for fetching data
     const fetchPromise = fetch(url).then(response => response.json());
-    
+
     // Store in cache
     dataCache.set(cacheKey, fetchPromise);
-    
+
     return fetchPromise;
 };
 
 // Function to prefetch adjacent pages
 export const prefetchAdjacentPages = (currentOptions: Options) => {
     if (!currentOptions.pagination) return;
-    
+
     const { pageIndex, pageSize } = currentOptions.pagination;
-    
+
     // Prefetch next page if not the last page
     if (pageIndex < 1000) { // Assuming a max of 1000 pages
         const nextPageOptions = {
@@ -112,7 +118,7 @@ export const prefetchAdjacentPages = (currentOptions: Options) => {
         };
         fetchUsers(nextPageOptions);
     }
-    
+
     // Prefetch previous page if not the first page
     if (pageIndex > 0) {
         const prevPageOptions = {
@@ -121,6 +127,14 @@ export const prefetchAdjacentPages = (currentOptions: Options) => {
         };
         fetchUsers(prevPageOptions);
     }
+};
+
+// Function to prefetch initial data
+export const prefetchInitialData = () => {
+    // Prefetch first page with default settings
+    fetchUsers({
+        pagination: { pageIndex: 0, pageSize: 10 }
+    });
 };
 
 // Define columns for Person data
@@ -132,7 +146,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -146,7 +160,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -159,7 +173,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -172,7 +186,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -185,7 +199,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -213,27 +227,36 @@ export const PersonTable = ({
     onSortingChange,
     onGlobalFilterChange,
     onColumnFiltersChange,
+    features,
     children
 }: {
     getData: Promise<PersonResponse>,
-    options: Options,
+    options?: Options,
     onSortingChange?: OnChangeFn<SortingState>,
     onPaginationChange?: OnChangeFn<PaginationState>,
     onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>,
     onGlobalFilterChange?: OnChangeFn<string>,
+    features?: {
+        enableSorting?: boolean,
+        enablePagination?: boolean,
+        enableGlobalFilter?: boolean,
+        enableColumnFilters?: boolean,
+        initialPageSize?: number,
+        initialSorting?: SortingState
+    },
     children?: React.ReactNode
 }) => {
     // Effect to prefetch adjacent pages when the current page changes
     useEffect(() => {
-        if (options.pagination) {
+        if (options?.pagination) {
             // Use a small timeout to not interfere with the current fetch
             const timeoutId = setTimeout(() => {
                 prefetchAdjacentPages(options);
             }, 100);
-            
+
             return () => clearTimeout(timeoutId);
         }
-    }, [options.pagination?.pageIndex]);
+    }, [options?.pagination?.pageIndex]);
 
     return (
         <DataTable<Person, PersonResponse>
@@ -248,6 +271,8 @@ export const PersonTable = ({
             getRowData={(response) => response.data}
             getRowCount={(response) => response.items}
             getPageCount={(response) => response.pages}
+            fetchDataFn={fetchUsers}
+            features={features}
         >
             {children}
         </DataTable>
