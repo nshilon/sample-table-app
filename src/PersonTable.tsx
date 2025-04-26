@@ -121,7 +121,7 @@ export const prefetchAdjacentPages = (currentOptions: Options) => {
 };
 
 // Define columns for Person data
-export const personColumns: ColumnDef<Person>[] = [
+export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
     {
         accessorKey: 'first_name',
         header: 'First Name',
