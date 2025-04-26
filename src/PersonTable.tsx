@@ -136,19 +136,11 @@ export const initialPersonResponse: PersonResponse = {
 export const PersonTable = ({
     getData,
     options,
-    onPaginationChange,
-    onSortingChange,
-    onGlobalFilterChange,
-    onColumnFiltersChange,
     features,
     children
 }: {
     getData: Promise<PersonResponse>,
     options?: Options,
-    onSortingChange?: OnChangeFn<SortingState>,
-    onPaginationChange?: OnChangeFn<PaginationState>,
-    onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>,
-    onGlobalFilterChange?: OnChangeFn<string>,
     features?: {
         enableSorting?: boolean,
         enablePagination?: boolean,
@@ -177,10 +169,6 @@ export const PersonTable = ({
             columns={personColumns}
             options={options}
             initialData={initialPersonResponse}
-            onPaginationChange={onPaginationChange}
-            onSortingChange={onSortingChange}
-            onGlobalFilterChange={onGlobalFilterChange}
-            onColumnFiltersChange={onColumnFiltersChange}
             getRowData={(response) => response.data}
             getRowCount={(response) => response.items}
             getPageCount={(response) => response.pages}

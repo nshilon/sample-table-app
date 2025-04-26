@@ -1,8 +1,8 @@
-import {ColumnDef, ColumnFiltersState, OnChangeFn, PaginationState, SortingState} from "@tanstack/react-table";
+import {ColumnDef, SortingState} from "@tanstack/react-table";
 import { DataTable } from "./DataTable";
 import { debounce } from "./lib/utils";
 import { createDataCache, FetchOptions } from "./lib/dataCache";
-import {ChangeEvent, useEffect} from "react";
+import React, {ChangeEvent, useEffect} from "react";
 
 // Product type definition
 export type Product = {
@@ -123,13 +123,14 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
         accessorKey: 'description',
         header: 'Description',
         cell: info => info.getValue(),
+        enableSorting: false,
         meta: {
-            filterComponent: (column: any) => (
-                <input 
-                    type="search"
-                    onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
-                />
-            )
+            // filterComponent: (column: any) => (
+            //     <input
+            //         type="search"
+            //         onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
+            //     />
+            // )
         }
     }
 ];
@@ -138,19 +139,11 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
 export const ProductTable = ({
     getData,
     options,
-    onPaginationChange,
-    onSortingChange,
-    onGlobalFilterChange,
-    onColumnFiltersChange,
     features,
     children
 }: {
     getData: Promise<ProductResponse>,
     options?: Options,
-    onSortingChange?: OnChangeFn<SortingState>,
-    onPaginationChange?: OnChangeFn<PaginationState>,
-    onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>,
-    onGlobalFilterChange?: OnChangeFn<string>,
     features?: {
         enableSorting?: boolean,
         enablePagination?: boolean,
@@ -179,10 +172,6 @@ export const ProductTable = ({
             columns={productColumns}
             options={options}
             initialData={initialProductResponse}
-            onPaginationChange={onPaginationChange}
-            onSortingChange={onSortingChange}
-            onGlobalFilterChange={onGlobalFilterChange}
-            onColumnFiltersChange={onColumnFiltersChange}
             getRowData={(response) => response.data}
             getRowCount={(response) => response.items}
             getPageCount={(response) => response.pages}

@@ -33,10 +33,6 @@ export function DataTable<TData, TResponse>({
     columns,
     options,
     initialData,
-    onPaginationChange,
-    onSortingChange,
-    onGlobalFilterChange,
-    onColumnFiltersChange,
     getRowData,
     getRowCount,
     getPageCount,
@@ -54,10 +50,6 @@ export function DataTable<TData, TResponse>({
     columns: ColumnDef<TData, { filterComponent: any }>[];
     options?: TableOptions;
     initialData: TResponse;
-    onPaginationChange?: OnChangeFn<PaginationState>;
-    onSortingChange?: OnChangeFn<SortingState>;
-    onGlobalFilterChange?: OnChangeFn<string>;
-    onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>;
     getRowData: (response: TResponse) => TData[];
     getRowCount: (response: TResponse) => number;
     getPageCount: (response: TResponse) => number;
@@ -106,33 +98,21 @@ export function DataTable<TData, TResponse>({
     const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
         const newPagination = typeof updater === 'function' ? updater(pagination) : updater;
         setPagination(newPagination);
-        if (onPaginationChange) {
-            onPaginationChange(newPagination);
-        }
     };
 
     const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
         const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
         setSorting(newSorting);
-        if (onSortingChange) {
-            onSortingChange(newSorting);
-        }
     };
 
     const handleGlobalFilterChange: OnChangeFn<string> = (updater) => {
         const newGlobalFilter = typeof updater === 'function' ? updater(globalFilter) : updater;
         setGlobalFilter(newGlobalFilter);
-        if (onGlobalFilterChange) {
-            onGlobalFilterChange(newGlobalFilter);
-        }
     };
 
     const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updater) => {
         const newColumnFilters = typeof updater === 'function' ? updater(columnFilters) : updater;
         setColumnFilters(newColumnFilters);
-        if (onColumnFiltersChange) {
-            onColumnFiltersChange(newColumnFilters);
-        }
     };
 
     // Use effect to fetch data and update state
@@ -188,10 +168,10 @@ export function DataTable<TData, TResponse>({
             globalFilter: options?.globalFilter || globalFilter,
             columnFilters: options?.columnFilters || columnFilters,
         },
-        onPaginationChange: options ? onPaginationChange : handlePaginationChange,
-        onSortingChange: options ? onSortingChange : handleSortingChange,
-        onGlobalFilterChange: options ? onGlobalFilterChange : handleGlobalFilterChange,
-        onColumnFiltersChange: options ? onColumnFiltersChange : handleColumnFiltersChange,
+        onPaginationChange: handlePaginationChange,
+        onSortingChange: handleSortingChange,
+        onGlobalFilterChange: handleGlobalFilterChange,
+        onColumnFiltersChange: handleColumnFiltersChange,
     });
 
     return (
