@@ -39,7 +39,7 @@ function App() {
     }, 500);
 
     return (
-        <>
+        <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
             <div>
                 <input placeholder="Search..." type="search" onChange={e => handleGlobalFilterChange(e.target.value)} />
             </div>
@@ -47,19 +47,19 @@ function App() {
 
             <Suspense fallback={<div>Loading...</div>}>
                 <DataTable getData={p} options={options}
-                           onPaginationChange={((updatePagination: Updater<Options['pagination']>) => {
+                           onPaginationChange={debounce((updatePagination: Updater<Options['pagination']>) => {
                                updateOptions(prev => ({
                                    ...prev,
                                    pagination: isFunction(updatePagination) ? updatePagination(prev.pagination!) : updatePagination
                                }));
-                           })}
-                           onSortingChange={(updateSorting: Updater<Options['sorting']>) => {
+                           }, 100)}
+                           onSortingChange={debounce((updateSorting: Updater<Options['sorting']>) => {
                                updateOptions(prev => ({
                                    ...prev,
                                    // pagination: {pageIndex: 0, pageSize: prev.pagination?.pageSize || 10},
                                    sorting: isFunction(updateSorting) ? updateSorting(prev.sorting!) : [...prev.sorting || [], ...updateSorting || []]
                                }));
-                           }}
+                           }, 100)}
                            onGlobalFilterChange={debounce((updateGlobalFilter: Updater<Options['globalFilter']>) => {
                                updateOptions(prev => ({
                                    ...prev,
@@ -74,14 +74,11 @@ function App() {
                                    columnFilters: isFunction(updateColumnFilters) ? updateColumnFilters(prev.columnFilters!) : [...prev.columnFilters || [], ...updateColumnFilters || []]
                                }));
                            }, 500)}>
-                    {isPending && <div className="transition-indicator">Updating...</div>}
-
                 </DataTable>
 
             </Suspense>
-            {/* Add a loading indicator that shows during transitions */}
 
-        </>
+        </div>
 
     );
 }

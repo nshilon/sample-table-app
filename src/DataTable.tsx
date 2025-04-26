@@ -7,7 +7,7 @@
 //     "ip_address": "156.16.179.67"
 // }
 
-import {ChangeEvent, use, useDeferredValue, useTransition, useState, useEffect, useRef} from "react";
+import {ChangeEvent, useDeferredValue, useTransition, useState, useEffect, useRef} from "react";
 import {
     ColumnFiltersState,
     createColumnHelper,
@@ -155,9 +155,21 @@ const initialResponse: PersonResponse = {
         last: 0
     }
 
-const DataTableWrapper = ({getData, options, children, ...props}: {
+const DataTable = ({
+                       getData,
+                       options,
+                       onPaginationChange,
+                       onSortingChange,
+                       onGlobalFilterChange,
+                       onColumnFiltersChange,
+                       children
+                   }: {
     getData: Promise<PersonResponse>,
     options: Options,
+    onSortingChange?: OnChangeFn<SortingState>,
+    onPaginationChange?: OnChangeFn<PaginationState>,
+    onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>,
+    onGlobalFilterChange?: OnChangeFn<string>,
     children?: React.ReactNode
 }) => {
     // Use transition to avoid showing the Suspense fallback during transitions
@@ -169,6 +181,9 @@ const DataTableWrapper = ({getData, options, children, ...props}: {
     // Keep a reference to the latest options to use in effects
     const latestOptionsRef = useRef(options);
     latestOptionsRef.current = options;
+
+    // Extract options for table state
+    const {pagination, sorting, globalFilter, columnFilters} = options;
 
     // Effect to prefetch adjacent pages when the current page changes
     useEffect(() => {
@@ -210,33 +225,8 @@ const DataTableWrapper = ({getData, options, children, ...props}: {
     // Apply deferred value to the current data to avoid flickering
     const deferredData = useDeferredValue(currentData);
 
-    return (
-        <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
-            <DataTable getData={deferredData} options={options} {...props}/>
-            <div>{children}</div>
-        </div>
-    );
-}
-
-
-const DataTable = ({
-                       getData,
-                       options: {pagination, sorting, globalFilter, columnFilters},
-                       onPaginationChange,
-                       onSortingChange,
-                       onGlobalFilterChange,
-                       onColumnFiltersChange
-                   }: {
-    getData: PersonResponse,
-    options: Options,
-    onSortingChange?: OnChangeFn<SortingState>,
-    onPaginationChange?: OnChangeFn<PaginationState>,
-    onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>,
-    onGlobalFilterChange?: OnChangeFn<string>
-
-}) => {
     // Extract data from the response
-    const {data, items, pages} = getData;
+    const {data, items, pages} = deferredData;
 
     const table = useReactTable<Person>({
         data,
@@ -260,9 +250,9 @@ const DataTable = ({
     });
 
 
-    return <>
-
-        <table>
+    return (
+        <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
+            <table>
             <thead>
             {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
@@ -352,7 +342,9 @@ const DataTable = ({
 
             </tfoot>
         </table>
-    </>
+        {children}
+        </div>
+    );
 }
 
-export default DataTableWrapper;
+export default DataTable;
