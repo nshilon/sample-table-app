@@ -80,8 +80,8 @@ function AppWithMultipleTables() {
                         features={{
                             enableSorting: true,
                             enablePagination: true,
-                            enableGlobalFilter: true,
-                            enableColumnFilters: true,
+                            // enableGlobalFilter: true,
+                            // enableColumnFilters: true,
                             initialPageSize: 10,
                             initialSorting: initialProductSorting
                         }}

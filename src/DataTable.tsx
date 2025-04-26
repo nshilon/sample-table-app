@@ -8,6 +8,7 @@ import {
     useReactTable
 } from "@tanstack/react-table";
 import {useDeferredValue, useEffect, useRef, useState, useTransition} from "react";
+import {deepMerge} from "./lib/utils.tsx";
 
 // Generic type for table options
 export type TableOptions = {
@@ -29,23 +30,23 @@ export type DataTableFeatures = {
 
 // Generic DataTable component
 export function DataTable<TData, TResponse>({
-    getData,
-    columns,
-    options,
-    initialData,
-    getRowData,
-    getRowCount,
-    getPageCount,
-    fetchDataFn,
-    features = {
-        enableSorting: true,
-        enablePagination: true,
-        enableGlobalFilter: true,
-        enableColumnFilters: true,
-        initialPageSize: 10,
-        initialSorting: []
-    }
-}: {
+                                                getData,
+                                                columns,
+                                                options,
+                                                initialData,
+                                                getRowData,
+                                                getRowCount,
+                                                getPageCount,
+                                                fetchDataFn,
+                                                features = {
+                                                    enableSorting: true,
+                                                    enablePagination: true,
+                                                    enableGlobalFilter: true,
+                                                    enableColumnFilters: true,
+                                                    initialPageSize: 10,
+                                                    initialSorting: []
+                                                }
+                                            }: {
     getData: Promise<TResponse>;
     columns: ColumnDef<TData, { filterComponent: any }>[];
     options?: TableOptions;
@@ -149,48 +150,75 @@ export function DataTable<TData, TResponse>({
     const rowCount = getRowCount(deferredData);
     const pageCount = getPageCount(deferredData);
 
-    const table = useReactTable<TData>({
+    // Create the table instance using useReactTable
+    const baseTableOptions = {
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        manualPagination: true,
-        manualSorting: true,
-        manualFiltering: true,
-        enableGlobalFilter: features.enableGlobalFilter,
-        enableSorting: features.enableSorting,
-        enableFilters: features.enableColumnFilters,
-        maxMultiSortColCount: 3,
         rowCount: rowCount,
         pageCount: pageCount,
-        state: {
-            pagination: options?.pagination || pagination,
-            sorting: options?.sorting || sorting,
-            globalFilter: options?.globalFilter || globalFilter,
-            columnFilters: options?.columnFilters || columnFilters,
-        },
-        onPaginationChange: handlePaginationChange,
-        onSortingChange: handleSortingChange,
-        onGlobalFilterChange: handleGlobalFilterChange,
-        onColumnFiltersChange: handleColumnFiltersChange,
-    });
+    };
+
+    // prepare options based on features
+    if (features.enablePagination) {
+        deepMerge(baseTableOptions, {
+            manualPagination: true,
+            state: {
+                pagination: options?.pagination || pagination,
+            },
+            onPaginationChange: handlePaginationChange,
+
+        });
+    }
+
+    if (features.enableSorting) {
+        deepMerge(baseTableOptions, {
+            enableSorting: true,
+            manualSorting: true,
+            maxMultiSortColCount: 3,
+            state: {
+                sorting: options?.sorting || sorting,
+            },
+            onSortingChange: handleSortingChange,
+
+        });
+    }
+
+    if (features.enableGlobalFilter) {
+        deepMerge(baseTableOptions, {
+            enableGlobalFilter: true,
+            manualGlobalFilter: true,
+            state: {
+                globalFilter: options?.globalFilter || globalFilter,
+            },
+            onGlobalFilterChange: handleGlobalFilterChange,
+        });
+    }
+
+    if (features.enableColumnFilters) {
+        deepMerge(baseTableOptions, {
+            manualFiltering: true,
+            state: {
+                columnFilters: options?.columnFilters || columnFilters,
+            },
+            onColumnFiltersChange: handleColumnFiltersChange,
+        });
+    }
+
+
+    const table = useReactTable<TData>(baseTableOptions);
 
     return (
-        <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
+        <div style={{opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s'}}>
             {features.enableGlobalFilter && (
-                <div style={{ marginBottom: '1rem' }}>
+                <div style={{marginBottom: '1rem'}}>
                     <input
                         placeholder="Search..."
                         type="search"
                         value={options?.globalFilter || globalFilter}
                         onChange={e => {
                             const value = e.target.value;
-                            if (options) {
-                                if (onGlobalFilterChange) {
-                                    onGlobalFilterChange(value);
-                                }
-                            } else {
-                                handleGlobalFilterChange(value);
-                            }
+                            handleGlobalFilterChange(value);
                         }}
                         style={{
                             padding: '0.5rem',
@@ -204,87 +232,95 @@ export function DataTable<TData, TResponse>({
             )}
             <table>
                 <thead>
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map(header => (
-                                <th key={header.id}>
-                                    {header.isPlaceholder ? null : (
-                                        <div style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '.2rem',
-                                            ...(header.column.getCanSort() ? {cursor: 'pointer'} : {})
-                                        }}>
-                                            <button
-                                                onClick={header.column.getToggleSortingHandler()}
-                                                style={{
-                                                    height: '1rem',
-                                                    lineHeight: '1rem',
-                                                    padding: '0 .25rem',
-                                                    outline: 'none',
-                                                    border: 'none',
-                                                    background: 'none',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                {flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                                {header.column.getCanSort() ? (
-                                                    header.column.getIsSorted() ?
+                {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                        {headerGroup.headers.map(header => (
+                            <th key={header.id}>
+                                {header.isPlaceholder ? null : (
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '.2rem',
+                                        ...(header.column.getCanSort() ? {cursor: 'pointer'} : {})
+                                    }}>
+                                        <button
+                                            onClick={header.column.getToggleSortingHandler()}
+                                            style={{
+                                                height: '1rem',
+                                                lineHeight: '1rem',
+                                                padding: '0 .25rem',
+                                                outline: 'none',
+                                                border: 'none',
+                                                background: 'none',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                            {header.column.getCanSort() ? (
+                                                header.column.getIsSorted() ?
                                                     (header.column.getIsSorted() === 'desc' ? '🔻' : '🔺') : ''
-                                                ) : null}
-                                                {header.column.getCanSort()  && header.column.getIsSorted() && table.getState().sorting.length > 1 ?
-                                                    <sup style={{fontSize: '.5rem'}}>{header.column.getSortIndex()+1}</sup> : null}
-                                            </button>
+                                            ) : null}
+                                            {header.column.getCanSort() && header.column.getIsSorted() && table.getState().sorting.length > 1 ?
+                                                <sup
+                                                    style={{fontSize: '.5rem'}}>{header.column.getSortIndex() + 1}</sup> : null}
+                                        </button>
 
-                                            {/* Render custom filter component if provided */}
-                                            {header.column.columnDef.meta?.filterComponent &&
-                                                header.column.columnDef.meta.filterComponent(header.column)
-                                            }
-                                        </div>
-                                    )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
+
+
+                                        {/* Render custom filter component if provided */}
+                                        {
+
+                                            table.options.manualFiltering &&
+                                            header.column.getCanFilter() &&
+
+                                            header.column.columnDef.meta?.filterComponent &&
+                                            header.column.columnDef.meta.filterComponent(header.column)
+                                        }
+                                    </div>
+                                )}
+                            </th>
+                        ))}
+                    </tr>
+                ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <td key={cell.id}>
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
+                {table.getRowModel().rows.map(row => (
+                    <tr key={row.id}>
+                        {row.getVisibleCells().map(cell => (
+                            <td key={cell.id}>
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </td>
+                        ))}
+                    </tr>
+                ))}
                 </tbody>
                 {features.enablePagination && (
                     <tfoot>
-                        <tr>
-                            <td colSpan={columns.length}>
-                                <button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
-                                    {'<<'}
-                                </button>
-                                <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                                    {'<'}
-                                </button>
-                                <span>
+                    <tr>
+                        <td colSpan={columns.length}>
+                            <button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>
+                                {'<<'}
+                            </button>
+                            <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                                {'<'}
+                            </button>
+                            <span>
                                     page {table.getState().pagination.pageIndex + 1} of {pageCount} pages, total items {rowCount}
                                 </span>
-                                <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                                    {'>'}
-                                </button>
-                                <button
-                                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                                    disabled={!table.getCanNextPage()}
-                                >
-                                    {'>>'}
-                                </button>
-                            </td>
-                        </tr>
+                            <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+                                {'>'}
+                            </button>
+                            <button
+                                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                disabled={!table.getCanNextPage()}
+                            >
+                                {'>>'}
+                            </button>
+                        </td>
+                    </tr>
                     </tfoot>
                 )}
             </table>
