@@ -30,7 +30,6 @@ export type DataTableFeatures = {
 
 // Generic DataTable component
 export function DataTable<TData, TResponse>({
-                                                getData,
                                                 columns,
                                                 options,
                                                 initialData,
@@ -47,14 +46,13 @@ export function DataTable<TData, TResponse>({
                                                     initialSorting: []
                                                 }
                                             }: {
-    getData: Promise<TResponse>;
     columns: ColumnDef<TData, { filterComponent: any }>[];
     options?: TableOptions;
     initialData: TResponse;
     getRowData: (response: TResponse) => TData[];
     getRowCount: (response: TResponse) => number;
     getPageCount: (response: TResponse) => number;
-    fetchDataFn?: (options: TableOptions) => Promise<TResponse>;
+    fetchDataFn: (options: TableOptions) => Promise<TResponse>;
     features?: DataTableFeatures;
 }) {
     // Use transition to avoid showing the Suspense fallback during transitions
@@ -89,10 +87,7 @@ export function DataTable<TData, TResponse>({
 
     // Function to get current data based on internal state
     const getCurrentData = () => {
-        if (fetchDataFn && !options) {
-            return fetchDataFn(internalOptions);
-        }
-        return getData;
+        return fetchDataFn(options || internalOptions);
     };
 
     // Handle internal state changes
@@ -140,7 +135,7 @@ export function DataTable<TData, TResponse>({
         return () => {
             isMounted = false;
         };
-    }, [options, pagination, sorting, globalFilter, columnFilters]);
+    }, [options, pagination, sorting, globalFilter, columnFilters, fetchDataFn]);
 
     // Apply deferred value to the current data to avoid flickering
     const deferredData = useDeferredValue(currentData);
@@ -307,9 +302,9 @@ export function DataTable<TData, TResponse>({
                             <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                                 {'<'}
                             </button>
-                            <span>
+                            <small>
                                     page {table.getState().pagination.pageIndex + 1} of {pageCount} pages, total items {rowCount}
-                                </span>
+                                </small>
                             <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
                                 {'>'}
                             </button>

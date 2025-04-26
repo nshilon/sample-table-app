@@ -70,7 +70,7 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -84,7 +84,7 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="search"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -98,7 +98,7 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
         cell: info => `$${info.getValue()}`,
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="number"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -112,7 +112,7 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
         cell: info => info.getValue(),
         meta: {
             filterComponent: (column: any) => (
-                <input 
+                <input
                     type="number"
                     onChange={debounce((e: ChangeEvent<HTMLInputElement>) => column.setFilterValue(e.target.value), 500)}
                 />
@@ -137,12 +137,10 @@ export const productColumns: ColumnDef<Product, { filterComponent: any }>[] = [
 
 // ProductTable component that uses the generic DataTable
 export const ProductTable = ({
-    getData,
     options,
     features,
     children
 }: {
-    getData: Promise<ProductResponse>,
     options?: Options,
     features?: {
         enableSorting?: boolean,
@@ -161,14 +159,13 @@ export const ProductTable = ({
             const timeoutId = setTimeout(() => {
                 prefetchAdjacentPages(options);
             }, 100);
-            
+
             return () => clearTimeout(timeoutId);
         }
     }, [options?.pagination?.pageIndex]);
 
     return (
         <DataTable<Product, ProductResponse>
-            getData={getData}
             columns={productColumns}
             options={options}
             initialData={initialProductResponse}

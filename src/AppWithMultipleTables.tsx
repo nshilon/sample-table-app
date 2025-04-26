@@ -28,10 +28,10 @@ function AppWithMultipleTables() {
     return (
         <div>
             <div style={{ marginBottom: '20px' }}>
-                <button 
+                <button
                     onClick={() => setActiveTable('persons')}
-                    style={{ 
-                        padding: '8px 16px', 
+                    style={{
+                        padding: '8px 16px',
                         marginRight: '10px',
                         backgroundColor: activeTable === 'persons' ? '#4a90e2' : '#f0f0f0',
                         color: activeTable === 'persons' ? 'white' : 'black',
@@ -42,9 +42,9 @@ function AppWithMultipleTables() {
                 >
                     Show Users
                 </button>
-                <button 
+                <button
                     onClick={() => setActiveTable('products')}
-                    style={{ 
+                    style={{
                         padding: '8px 16px',
                         backgroundColor: activeTable === 'products' ? '#4a90e2' : '#f0f0f0',
                         color: activeTable === 'products' ? 'white' : 'black',
@@ -61,7 +61,6 @@ function AppWithMultipleTables() {
                 <div>
                     <h2>Persons Table</h2>
                     <PersonTable
-                        getData={prefetchPersonData()}
                         features={{
                             enableSorting: true,
                             enablePagination: true,
@@ -76,7 +75,6 @@ function AppWithMultipleTables() {
                 <div>
                     <h2>Products Table</h2>
                     <ProductTable
-                        getData={prefetchProductData()}
                         features={{
                             enableSorting: true,
                             enablePagination: true,

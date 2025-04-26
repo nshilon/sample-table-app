@@ -134,12 +134,10 @@ export const initialPersonResponse: PersonResponse = {
 
 // PersonTable component that uses the generic DataTable
 export const PersonTable = ({
-    getData,
     options,
     features,
     children
 }: {
-    getData: Promise<PersonResponse>,
     options?: Options,
     features?: {
         enableSorting?: boolean,
@@ -165,7 +163,6 @@ export const PersonTable = ({
 
     return (
         <DataTable<Person, PersonResponse>
-            getData={getData}
             columns={personColumns}
             options={options}
             initialData={initialPersonResponse}

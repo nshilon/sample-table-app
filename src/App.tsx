@@ -15,13 +15,9 @@ function App() {
         prefetchInitialData();
     }, []);
 
-    // Create a promise to fetch data with no initial options
-    const p = fetchUsers({});
-
     return (
         <div>
             <PersonTable
-                getData={p}
                 features={{
                     enableSorting: true,
                     enablePagination: true,
