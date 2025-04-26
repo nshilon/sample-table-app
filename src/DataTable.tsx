@@ -7,7 +7,7 @@
 //     "ip_address": "156.16.179.67"
 // }
 
-import {ChangeEvent, use} from "react";
+import {ChangeEvent, use, useDeferredValue, useTransition, useState, useEffect, useRef} from "react";
 import {
     ColumnFiltersState,
     createColumnHelper,
@@ -37,7 +37,27 @@ export type Options = {
 
 }
 
+// Simple cache to store fetched data
+const dataCache = new Map<string, Promise<PersonResponse>>();
+
+// Helper to generate a cache key from options
+const getCacheKey = (options: Options): string => {
+    const sortKey = options.sorting ? options.sorting.map(s => `${s.id}:${s.desc}`).join(',') : '';
+    const pageKey = options.pagination ? `page=${options.pagination.pageIndex},size=${options.pagination.pageSize}` : '';
+    const filterKey = options.globalFilter || '';
+    const columnFilterKey = options.columnFilters ? options.columnFilters.map(f => `${f.id}:${f.value}`).join(',') : '';
+
+    return `${sortKey}|${pageKey}|${filterKey}|${columnFilterKey}`;
+};
+
 export const fetchUsers = async (options: Options) => {
+    // Generate cache key
+    const cacheKey = getCacheKey(options);
+
+    // Check if we have cached data
+    if (dataCache.has(cacheKey)) {
+        return dataCache.get(cacheKey);
+    }
 
     let url = 'http://localhost:3001/users?';
 
@@ -70,8 +90,38 @@ export const fetchUsers = async (options: Options) => {
         url += options.columnFilters.map(filter => `&${filter.id}=${filter.value}`).join('');
     }
 
-    const response = await fetch(url);
-    return await response.json();
+    // Create the promise for fetching data
+    const fetchPromise = fetch(url).then(response => response.json());
+
+    // Store in cache
+    dataCache.set(cacheKey, fetchPromise);
+
+    return fetchPromise;
+};
+
+// Function to prefetch adjacent pages
+export const prefetchAdjacentPages = (currentOptions: Options) => {
+    if (!currentOptions.pagination) return;
+
+    const { pageIndex, pageSize } = currentOptions.pagination;
+
+    // Prefetch next page if not the last page
+    if (pageIndex < 1000) { // Assuming a max of 1000 pages
+        const nextPageOptions = {
+            ...currentOptions,
+            pagination: { pageIndex: pageIndex + 1, pageSize }
+        };
+        fetchUsers(nextPageOptions);
+    }
+
+    // Prefetch previous page if not the first page
+    if (pageIndex > 0) {
+        const prevPageOptions = {
+            ...currentOptions,
+            pagination: { pageIndex: pageIndex - 1, pageSize }
+        };
+        fetchUsers(prevPageOptions);
+    }
 }
 
 const columnHelper = createColumnHelper<Person>();
@@ -95,6 +145,79 @@ type PersonResponse = {
     data: Person[];
 }
 
+const initialResponse: PersonResponse = {
+        data: [],
+        pages: 0,
+        items: 0,
+        first: 0,
+        prev: 0,
+        next: 0,
+        last: 0
+    }
+
+const DataTableWrapper = ({getData, options, children, ...props}: {
+    getData: Promise<PersonResponse>,
+    options: Options,
+    children?: React.ReactNode
+}) => {
+    // Use transition to avoid showing the Suspense fallback during transitions
+    const [isPending, startTransition] = useTransition();
+
+    // Keep track of the latest data
+    const [currentData, setCurrentData] = useState<PersonResponse>(initialResponse);
+
+    // Keep a reference to the latest options to use in effects
+    const latestOptionsRef = useRef(options);
+    latestOptionsRef.current = options;
+
+    // Effect to prefetch adjacent pages when the current page changes
+    useEffect(() => {
+        if (options.pagination) {
+            // Use a small timeout to not interfere with the current fetch
+            const timeoutId = setTimeout(() => {
+                prefetchAdjacentPages(options);
+            }, 100);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [options.pagination?.pageIndex]);
+
+    // Use effect to fetch data and update state
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchData = async () => {
+            try {
+                // Start transition to mark this update as non-urgent
+                startTransition(async () => {
+                    const result = await getData;
+                    if (isMounted) {
+                        setCurrentData(result);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [getData]);
+
+    // Apply deferred value to the current data to avoid flickering
+    const deferredData = useDeferredValue(currentData);
+
+    return (
+        <div style={{ opacity: isPending ? 0.7 : 1, transition: 'opacity 0.2s' }}>
+            <DataTable getData={deferredData} options={options} {...props}/>
+            <div>{children}</div>
+        </div>
+    );
+}
+
 
 const DataTable = ({
                        getData,
@@ -104,7 +227,7 @@ const DataTable = ({
                        onGlobalFilterChange,
                        onColumnFiltersChange
                    }: {
-    getData: Promise<PersonResponse>,
+    getData: PersonResponse,
     options: Options,
     onSortingChange?: OnChangeFn<SortingState>,
     onPaginationChange?: OnChangeFn<PaginationState>,
@@ -112,9 +235,8 @@ const DataTable = ({
     onGlobalFilterChange?: OnChangeFn<string>
 
 }) => {
-
-    const {data, items, pages} = use<PersonResponse>(getData);
-
+    // Extract data from the response
+    const {data, items, pages} = getData;
 
     const table = useReactTable<Person>({
         data,
@@ -163,22 +285,20 @@ const DataTable = ({
                                         background: 'none',
                                         cursor: 'pointer'
                                     }}>
-                                            {flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
 
-                                         {header.column.getCanSort() ? (
-                                                    header.column.getIsSorted() ? (header.column.getIsSorted() === 'desc' ? '🔻' : '🔺') : ''
+                                        {header.column.getCanSort() ? (
+                                            header.column.getIsSorted() ? (header.column.getIsSorted() === 'desc' ? '🔻' : '🔺') : ''
 
 
-                                            ) : null}
+                                        ) : null}
                                     </button>
                                     <span>
 
                                                 </span>
-
-
 
 
                                     <input type="search"
@@ -235,4 +355,4 @@ const DataTable = ({
     </>
 }
 
-export default DataTable;
+export default DataTableWrapper;
