@@ -7,7 +7,7 @@ import {
     SortingState,
     useReactTable
 } from "@tanstack/react-table";
-import {ReactNode, useDeferredValue, useEffect, useRef, useState, useTransition} from "react";
+import {useDeferredValue, useEffect, useRef, useState, useTransition} from "react";
 
 // Generic type for table options
 export type TableOptions = {
@@ -33,7 +33,7 @@ export function DataTable<TData, TResponse>({
     children
 }: {
     getData: Promise<TResponse>;
-    columns: ColumnDef<TData>[];
+    columns: ColumnDef<TData, { filterComponent: any }>[];
     options: TableOptions;
     initialData: TResponse;
     onPaginationChange?: OnChangeFn<PaginationState>;
