@@ -52,3 +52,12 @@ export default tseslint.config({
   },
 })
 ```
+
+# next steps: 
+1. re-factor: introduce data provider, which will take care of handling data fetching, extracting  rowData, rowCount, PageCount, initialData etc.
+2. document DataTable API, columns, DataProvider API
+3. document DataCache API
+4. document 
+
+
+
