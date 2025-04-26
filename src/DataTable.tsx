@@ -29,8 +29,7 @@ export function DataTable<TData, TResponse>({
     onColumnFiltersChange,
     getRowData,
     getRowCount,
-    getPageCount,
-    children
+    getPageCount
 }: {
     getData: Promise<TResponse>;
     columns: ColumnDef<TData, { filterComponent: any }>[];
@@ -43,7 +42,6 @@ export function DataTable<TData, TResponse>({
     getRowData: (response: TResponse) => TData[];
     getRowCount: (response: TResponse) => number;
     getPageCount: (response: TResponse) => number;
-    children?: React.ReactNode;
 }) {
     // Use transition to avoid showing the Suspense fallback during transitions
     const [isPending, startTransition] = useTransition();
@@ -99,6 +97,7 @@ export function DataTable<TData, TResponse>({
         manualSorting: true,
         manualFiltering: true,
         enableGlobalFilter: true,
+        maxMultiSortColCount: 3,
         rowCount: rowCount,
         pageCount: pageCount,
         state: {
@@ -148,11 +147,14 @@ export function DataTable<TData, TResponse>({
                                                     header.column.getIsSorted() ?
                                                     (header.column.getIsSorted() === 'desc' ? '🔻' : '🔺') : ''
                                                 ) : null}
+                                                {header.column.getCanSort()  && header.column.getIsSorted() && table.getState().sorting.length > 1 ?
+                                                    <sup style={{fontSize: '.5rem'}}>{header.column.getSortIndex()+1}</sup> : null}
                                             </button>
-                                            <span></span>
+
                                             {/* Render custom filter component if provided */}
                                             {header.column.columnDef.meta?.filterComponent &&
-                                                header.column.columnDef.meta.filterComponent(header.column)}
+                                                header.column.columnDef.meta.filterComponent(header.column)
+                                            }
                                         </div>
                                     )}
                                 </th>
@@ -196,7 +198,6 @@ export function DataTable<TData, TResponse>({
                     </tr>
                 </tfoot>
             </table>
-            {children}
         </div>
     );
 }
