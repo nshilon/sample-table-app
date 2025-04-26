@@ -8003,44 +8003,804 @@
   ],
   "products": [
     {
-      "id": 1,
-      "name": "Wireless Mouse",
+      "id": 6835,
+      "name": "Licensed Bamboo Gloves",
+      "category": "Tools & Home Improvement",
+      "price": "154.19",
+      "stock": 6,
+      "description": "Innovative Fish featuring frequent technology and Rubber construction"
+    },
+    {
+      "id": 4744,
+      "name": "Generic Steel Computer",
+      "category": "Art Supplies & Crafts",
+      "price": "224.59",
+      "stock": 8,
+      "description": "Refined Cheese designed with Bronze for puzzled performance"
+    },
+    {
+      "id": 7693,
+      "name": "Elegant Marble Hat",
+      "category": "Sports & Outdoors",
+      "price": "398.79",
+      "stock": 4,
+      "description": "Introducing the Saudi Arabia-inspired Car, blending light style with local craftsmanship"
+    },
+    {
+      "id": 2388,
+      "name": "Frozen Rubber Computer",
+      "category": "Office Supplies",
+      "price": "155.23",
+      "stock": 6,
+      "description": "Ergonomic Towels designed with Ceramic for husky performance"
+    },
+    {
+      "id": 4672,
+      "name": "Unbranded Cotton Tuna",
+      "category": "Tools & Home Improvement",
+      "price": "20.09",
+      "stock": 9,
+      "description": "The Mavis Soap is the latest in a series of low products from Ullrich, Cummings and Becker"
+    },
+    {
+      "id": 2904,
+      "name": "Awesome Aluminum Soap",
+      "category": "Art Supplies & Crafts",
+      "price": "193.85",
+      "stock": 1,
+      "description": "Discover the whole new Chicken with an exciting mix of Aluminum ingredients"
+    },
+    {
+      "id": 2855,
+      "name": "Rustic Plastic Pizza",
+      "category": "Tools & Home Improvement",
+      "price": "207.00",
+      "stock": 12,
+      "description": "Our panda-friendly Towels ensures fatal comfort for your pets"
+    },
+    {
+      "id": 1982,
+      "name": "Frozen Concrete Chicken",
+      "category": "Office Supplies",
+      "price": "260.70",
+      "stock": 8,
+      "description": "The sleek and juvenile Soap comes with maroon LED lighting for smart functionality"
+    },
+    {
+      "id": 9204,
+      "name": "Soft Silk Salad",
+      "category": "Art Supplies & Crafts",
+      "price": "269.75",
+      "stock": 19,
+      "description": "Professional-grade Pizza perfect for impeccable training and recreational use"
+    },
+    {
+      "id": 7020,
+      "name": "Bespoke Rubber Sausages",
+      "category": "Clothing",
+      "price": "334.15",
+      "stock": 10,
+      "description": "Experience the sky blue brilliance of our Sausages, perfect for impartial environments"
+    },
+    {
+      "id": 5478,
+      "name": "Frozen Gold Mouse",
+      "category": "Tools & Home Improvement",
+      "price": "367.90",
+      "stock": 7,
+      "description": "The Adolphus Pizza is the latest in a series of acceptable products from Cassin - Dicki"
+    },
+    {
+      "id": 9691,
+      "name": "Oriental Ceramic Gloves",
+      "category": "Motorcycle Accessories",
+      "price": "131.20",
+      "stock": 14,
+      "description": "Experience the lavender brilliance of our Keyboard, perfect for intelligent environments"
+    },
+    {
+      "id": 6127,
+      "name": "Sleek Bamboo Tuna",
+      "category": "Pet Supplies",
+      "price": "244.29",
+      "stock": 8,
+      "description": "New blue Shoes with ergonomic design for firm comfort"
+    },
+    {
+      "id": 9329,
+      "name": "Handcrafted Rubber Sausages",
+      "category": "Computer Hardware & Peripherals",
+      "price": "493.35",
+      "stock": 9,
+      "description": "New Car model with 17 GB RAM, 291 GB storage, and sparse features"
+    },
+    {
+      "id": 2681,
+      "name": "Handcrafted Rubber Sausages",
+      "category": "Musical Instruments",
+      "price": "414.01",
+      "stock": 9,
+      "description": "Barrows - Brekke's most advanced Cheese technology increases front capabilities"
+    },
+    {
+      "id": 8333,
+      "name": "Small Cotton Keyboard",
+      "category": "Books",
+      "price": "366.25",
+      "stock": 2,
+      "description": "The sleek and mixed Pizza comes with cyan LED lighting for smart functionality"
+    },
+    {
+      "id": 8766,
+      "name": "Rustic Bamboo Chair",
+      "category": "Books",
+      "price": "254.35",
+      "stock": 13,
+      "description": "Featuring Neon-enhanced technology, our Keyboard offers unparalleled trustworthy performance"
+    },
+    {
+      "id": 7527,
+      "name": "Luxurious Metal Tuna",
+      "category": "Home & Garden",
+      "price": "323.39",
+      "stock": 16,
+      "description": "The Front-line composite service-desk Computer offers reliable performance and tinted design"
+    },
+    {
+      "id": 3483,
+      "name": "Rustic Steel Chicken",
+      "category": "Automotive Accessories",
+      "price": "237.74",
+      "stock": 10,
+      "description": "The sleek and elderly Computer comes with gold LED lighting for smart functionality"
+    },
+    {
+      "id": 8328,
+      "name": "Sleek Metal Tuna",
+      "category": "Toys",
+      "price": "447.60",
+      "stock": 3,
+      "description": "Tasty Chair designed with Granite for awful performance"
+    },
+    {
+      "id": 1330,
+      "name": "Luxurious Concrete Pizza",
+      "category": "Furniture & Appliances",
+      "price": "110.69",
+      "stock": 1,
+      "description": "Our fluffy-inspired Car brings a taste of luxury to your miserly lifestyle"
+    },
+    {
+      "id": 9821,
+      "name": "Practical Cotton Towels",
+      "category": "Gadgets for Kids",
+      "price": "272.39",
+      "stock": 8,
+      "description": "The Organized leading edge benchmark Hat offers reliable performance and tattered design"
+    },
+    {
+      "id": 439,
+      "name": "Small Metal Shoes",
+      "category": "Kitchenware & Dining Sets",
+      "price": "104.75",
+      "stock": 14,
+      "description": "New Towels model with 85 GB RAM, 386 GB storage, and necessary features"
+    },
+    {
+      "id": 3991,
+      "name": "Sleek Concrete Sausages",
+      "category": "Computer Hardware & Peripherals",
+      "price": "324.39",
+      "stock": 9,
+      "description": "The Callie Car is the latest in a series of illustrious products from Ledner - Hoppe"
+    },
+    {
+      "id": 8688,
+      "name": "Modern Gold Cheese",
+      "category": "Computer Hardware & Peripherals",
+      "price": "313.49",
+      "stock": 18,
+      "description": "Our butterfly-friendly Pizza ensures neat comfort for your pets"
+    },
+    {
+      "id": 8505,
+      "name": "Handmade Steel Soap",
+      "category": "Clothing",
+      "price": "27.59",
+      "stock": 4,
+      "description": "New black Pants with ergonomic design for ultimate comfort"
+    },
+    {
+      "id": 9778,
+      "name": "Soft Aluminum Bacon",
+      "category": "Home & Garden",
+      "price": "455.19",
+      "stock": 11,
+      "description": "Savor the tangy essence in our Shirt, designed for lumbering culinary adventures"
+    },
+    {
+      "id": 4623,
+      "name": "Recycled Concrete Ball",
+      "category": "Books",
+      "price": "191.79",
+      "stock": 18,
+      "description": "The silver Soap combines Saint Vincent and the Grenadines aesthetics with Mendelevium-based durability"
+    },
+    {
+      "id": 2055,
+      "name": "Small Wooden Shirt",
+      "category": "Health & Beauty",
+      "price": "313.39",
+      "stock": 6,
+      "description": "Discover the dolphin-like agility of our Gloves, perfect for impractical users"
+    },
+    {
+      "id": 743,
+      "name": "Gorgeous Marble Computer",
+      "category": "Automotive Accessories",
+      "price": "450.25",
+      "stock": 8,
+      "description": "New yellow Towels with ergonomic design for corny comfort"
+    },
+    {
+      "id": 2338,
+      "name": "Sleek Silk Bacon",
+      "category": "Clothing",
+      "price": "306.56",
+      "stock": 6,
+      "description": "Discover the fish-like agility of our Cheese, perfect for hollow users"
+    },
+    {
+      "id": 8678,
+      "name": "Handmade Rubber Shirt",
+      "category": "Motorcycle Accessories",
+      "price": "444.30",
+      "stock": 13,
+      "description": "Discover the frog-like agility of our Towels, perfect for pleasant users"
+    },
+    {
+      "id": 8080,
+      "name": "Tasty Marble Hat",
+      "category": "Toys",
+      "price": "161.39",
+      "stock": 15,
+      "description": "Professional-grade Pants perfect for complete training and recreational use"
+    },
+    {
+      "id": 8211,
+      "name": "Oriental Bamboo Mouse",
+      "category": "Books",
+      "price": "128.59",
+      "stock": 16,
+      "description": "Savor the creamy essence in our Bike, designed for unusual culinary adventures"
+    },
+    {
+      "id": 7462,
+      "name": "Electronic Ceramic Keyboard",
+      "category": "Toys",
+      "price": "318.59",
+      "stock": 4,
+      "description": "Our giraffe-friendly Hat ensures paltry comfort for your pets"
+    },
+    {
+      "id": 681,
+      "name": "Sleek Plastic Chips",
+      "category": "Toys",
+      "price": "309.65",
+      "stock": 15,
+      "description": "Featuring Lead-enhanced technology, our Ball offers unparalleled alive performance"
+    },
+    {
+      "id": 1058,
+      "name": "Ergonomic Gold Tuna",
+      "category": "Toys",
+      "price": "280.65",
+      "stock": 10,
+      "description": "Rice - Ebert's most advanced Bacon technology increases rundown capabilities"
+    },
+    {
+      "id": 8278,
+      "name": "Electronic Plastic Shirt",
+      "category": "Motorcycle Accessories",
+      "price": "157.49",
+      "stock": 7,
+      "description": "Innovative Table featuring lovely technology and Bamboo construction"
+    },
+    {
+      "id": 8354,
+      "name": "Sleek Concrete Tuna",
       "category": "Electronics",
-      "price": 29.99,
-      "stock": 150,
-      "description": "Ergonomic wireless mouse with adjustable DPI and long battery life."
+      "price": "177.99",
+      "stock": 19,
+      "description": "Savor the spicy essence in our Salad, designed for peppery culinary adventures"
     },
     {
-      "id": 2,
-      "name": "Water Bottle",
-      "category": "Sports",
-      "price": 14.95,
-      "stock": 300,
-      "description": "Stainless steel insulated water bottle, 750ml capacity."
+      "id": 3042,
+      "name": "Practical Bronze Shirt",
+      "category": "Office Supplies",
+      "price": "413.69",
+      "stock": 10,
+      "description": "Introducing the Niger-inspired Computer, blending empty style with local craftsmanship"
     },
     {
-      "id": 3,
-      "name": "Yoga Mat",
-      "category": "Fitness",
-      "price": 39.99,
-      "stock": 120,
-      "description": "Eco-friendly yoga mat with non-slip surface and extra cushioning."
+      "id": 3002,
+      "name": "Modern Marble Sausages",
+      "category": "Office Supplies",
+      "price": "374.29",
+      "stock": 17,
+      "description": "Experience the white brilliance of our Mouse, perfect for frugal environments"
     },
     {
-      "id": 4,
-      "name": "Desk Lamp",
-      "category": "Home",
-      "price": 24.50,
-      "stock": 85,
-      "description": "LED desk lamp with adjustable brightness and USB charging port."
+      "id": 8339,
+      "name": "Tasty Bamboo Towels",
+      "category": "Home & Garden",
+      "price": "387.55",
+      "stock": 10,
+      "description": "Featuring Technetium-enhanced technology, our Hat offers unparalleled smart performance"
     },
     {
-      "id": 5,
-      "name": "Bluetooth Headphones",
+      "id": 2304,
+      "name": "Generic Silk Gloves",
+      "category": "Sports & Outdoors",
+      "price": "457.55",
+      "stock": 2,
+      "description": "Featuring Hydrogen-enhanced technology, our Cheese offers unparalleled blue performance"
+    },
+    {
+      "id": 2343,
+      "name": "Practical Plastic Gloves",
+      "category": "Toys",
+      "price": "287.86",
+      "stock": 18,
+      "description": "The turquoise Mouse combines Costa Rica aesthetics with Americium-based durability"
+    },
+    {
+      "id": 2903,
+      "name": "Fresh Aluminum Shoes",
+      "category": "Jewelry & Watches",
+      "price": "362.65",
+      "stock": 1,
+      "description": "Featuring Krypton-enhanced technology, our Chair offers unparalleled misguided performance"
+    },
+    {
+      "id": 767,
+      "name": "Handmade Bamboo Pizza",
+      "category": "Pet Supplies",
+      "price": "148.59",
+      "stock": 12,
+      "description": "Featuring Manganese-enhanced technology, our Salad offers unparalleled gullible performance"
+    },
+    {
+      "id": 5573,
+      "name": "Intelligent Cotton Shirt",
+      "category": "Office Supplies",
+      "price": "99.05",
+      "stock": 18,
+      "description": "The purple Salad combines Madagascar aesthetics with Niobium-based durability"
+    },
+    {
+      "id": 9022,
+      "name": "Elegant Metal Tuna",
+      "category": "Automotive Accessories",
+      "price": "295.29",
+      "stock": 19,
+      "description": "New black Shoes with ergonomic design for easy comfort"
+    },
+    {
+      "id": 1890,
+      "name": "Unbranded Steel Ball",
+      "category": "Pet Supplies",
+      "price": "145.75",
+      "stock": 17,
+      "description": "Professional-grade Table perfect for focused training and recreational use"
+    },
+    {
+      "id": 5412,
+      "name": "Modern Silk Shoes",
+      "category": "Musical Instruments",
+      "price": "273.49",
+      "stock": 16,
+      "description": "Introducing the Japan-inspired Pants, blending colorful style with local craftsmanship"
+    },
+    {
+      "id": 3125,
+      "name": "Soft Aluminum Chips",
+      "category": "Art Supplies & Crafts",
+      "price": "119.23",
+      "stock": 17,
+      "description": "Schmeler - Rogahn's most advanced Chips technology increases warmhearted capabilities"
+    },
+    {
+      "id": 9133,
+      "name": "Intelligent Bamboo Salad",
+      "category": "Office Supplies",
+      "price": "376.79",
+      "stock": 13,
+      "description": "Professional-grade Ball perfect for awful training and recreational use"
+    },
+    {
+      "id": 4300,
+      "name": "Ergonomic Ceramic Salad",
+      "category": "Sports & Outdoors",
+      "price": "422.05",
+      "stock": 3,
+      "description": "Savor the delicious essence in our Keyboard, designed for pricey culinary adventures"
+    },
+    {
+      "id": 4320,
+      "name": "Incredible Bronze Bacon",
+      "category": "Jewelry & Watches",
+      "price": "210.80",
+      "stock": 14,
+      "description": "Introducing the Dominican Republic-inspired Bike, blending miserable style with local craftsmanship"
+    },
+    {
+      "id": 5115,
+      "name": "Handmade Plastic Table",
       "category": "Electronics",
-      "price": 89.99,
-      "stock": 60,
-      "description": "Noise-cancelling over-ear headphones with 20-hour battery life."
+      "price": "31.95",
+      "stock": 6,
+      "description": "Savor the crunchy essence in our Soap, designed for hospitable culinary adventures"
+    },
+    {
+      "id": 7805,
+      "name": "Incredible Marble Shirt",
+      "category": "Gadgets for Kids",
+      "price": "73.55",
+      "stock": 14,
+      "description": "Experience the magenta brilliance of our Hat, perfect for glass environments"
+    },
+    {
+      "id": 4955,
+      "name": "Oriental Gold Chips",
+      "category": "Gifts",
+      "price": "269.95",
+      "stock": 19,
+      "description": "Experience the tan brilliance of our Hat, perfect for buzzing environments"
+    },
+    {
+      "id": 7304,
+      "name": "Tasty Metal Hat",
+      "category": "Computer Hardware & Peripherals",
+      "price": "477.05",
+      "stock": 19,
+      "description": "Featuring Radon-enhanced technology, our Bike offers unparalleled optimal performance"
+    },
+    {
+      "id": 5982,
+      "name": "Practical Rubber Chicken",
+      "category": "Electronics",
+      "price": "433.85",
+      "stock": 19,
+      "description": "Professional-grade Chicken perfect for concerned training and recreational use"
+    },
+    {
+      "id": 771,
+      "name": "Small Granite Sausages",
+      "category": "Musical Instruments",
+      "price": "375.69",
+      "stock": 15,
+      "description": "Our cow-friendly Shirt ensures incomplete comfort for your pets"
+    },
+    {
+      "id": 404,
+      "name": "Luxurious Plastic Keyboard",
+      "category": "Toys",
+      "price": "376.09",
+      "stock": 12,
+      "description": "Innovative Bike featuring colorful technology and Granite construction"
+    },
+    {
+      "id": 3207,
+      "name": "Fantastic Bronze Pants",
+      "category": "Furniture & Appliances",
+      "price": "175.95",
+      "stock": 9,
+      "description": "Professional-grade Chair perfect for impossible training and recreational use"
+    },
+    {
+      "id": 355,
+      "name": "Unbranded Gold Cheese",
+      "category": "Computer Hardware & Peripherals",
+      "price": "275.70",
+      "stock": 8,
+      "description": "Featuring Holmium-enhanced technology, our Car offers unparalleled clear-cut performance"
+    },
+    {
+      "id": 8727,
+      "name": "Awesome Ceramic Shoes",
+      "category": "Office Supplies",
+      "price": "414.45",
+      "stock": 4,
+      "description": "The pink Cheese combines Solomon Islands aesthetics with Dubnium-based durability"
+    },
+    {
+      "id": 9305,
+      "name": "Bespoke Wooden Car",
+      "category": "Grocery",
+      "price": "404.90",
+      "stock": 4,
+      "description": "Savor the delicious essence in our Keyboard, designed for waterlogged culinary adventures"
+    },
+    {
+      "id": 3082,
+      "name": "Frozen Concrete Pizza",
+      "category": "Grocery",
+      "price": "498.35",
+      "stock": 19,
+      "description": "Professional-grade Fish perfect for unusual training and recreational use"
+    },
+    {
+      "id": 6195,
+      "name": "Frozen Ceramic Cheese",
+      "category": "Health & Beauty",
+      "price": "298.95",
+      "stock": 1,
+      "description": "Featuring Oganesson-enhanced technology, our Chair offers unparalleled functional performance"
+    },
+    {
+      "id": 984,
+      "name": "Awesome Concrete Sausages",
+      "category": "Computer Hardware & Peripherals",
+      "price": "10.29",
+      "stock": 11,
+      "description": "Our giraffe-friendly Ball ensures coordinated comfort for your pets"
+    },
+    {
+      "id": 6875,
+      "name": "Frozen Ceramic Keyboard",
+      "category": "Gadgets for Kids",
+      "price": "150.59",
+      "stock": 7,
+      "description": "Incredible Bacon designed with Silk for runny performance"
+    },
+    {
+      "id": 2895,
+      "name": "Unbranded Metal Chair",
+      "category": "Pet Supplies",
+      "price": "459.99",
+      "stock": 11,
+      "description": "Ergonomic Gloves made with Silk for all-day dreary support"
+    },
+    {
+      "id": 9272,
+      "name": "Handcrafted Marble Shoes",
+      "category": "Home & Garden",
+      "price": "418.59",
+      "stock": 8,
+      "description": "Discover the pastel new Soap with an exciting mix of Rubber ingredients"
+    },
+    {
+      "id": 9963,
+      "name": "Frozen Bamboo Soap",
+      "category": "Office Supplies",
+      "price": "23.59",
+      "stock": 13,
+      "description": "Our deer-friendly Shoes ensures black-and-white comfort for your pets"
+    },
+    {
+      "id": 2934,
+      "name": "Oriental Wooden Tuna",
+      "category": "Sports & Outdoors",
+      "price": "427.35",
+      "stock": 10,
+      "description": "Introducing the Jersey-inspired Tuna, blending hungry style with local craftsmanship"
+    },
+    {
+      "id": 8420,
+      "name": "Sleek Gold Ball",
+      "category": "Kitchenware & Dining Sets",
+      "price": "135.05",
+      "stock": 18,
+      "description": "Discover the hateful new Tuna with an exciting mix of Rubber ingredients"
+    },
+    {
+      "id": 3052,
+      "name": "Generic Metal Ball",
+      "category": "Tools & Home Improvement",
+      "price": "437.49",
+      "stock": 12,
+      "description": "Discover the sea lion-like agility of our Ball, perfect for advanced users"
+    },
+    {
+      "id": 845,
+      "name": "Fresh Granite Gloves",
+      "category": "Gadgets for Kids",
+      "price": "347.09",
+      "stock": 13,
+      "description": "Innovative Bike featuring immaculate technology and Silk construction"
+    },
+    {
+      "id": 8746,
+      "name": "Handcrafted Steel Keyboard",
+      "category": "Sports & Outdoors",
+      "price": "283.30",
+      "stock": 14,
+      "description": "Experience the maroon brilliance of our Chair, perfect for good-natured environments"
+    },
+    {
+      "id": 2214,
+      "name": "Soft Metal Car",
+      "category": "Kitchenware & Dining Sets",
+      "price": "198.59",
+      "stock": 9,
+      "description": "New Shoes model with 42 GB RAM, 260 GB storage, and bogus features"
+    },
+    {
+      "id": 8669,
+      "name": "Oriental Steel Hat",
+      "category": "Tools & Home Improvement",
+      "price": "222.60",
+      "stock": 12,
+      "description": "The grey Sausages combines Curacao aesthetics with Molybdenum-based durability"
+    },
+    {
+      "id": 6115,
+      "name": "Soft Steel Fish",
+      "category": "Health & Beauty",
+      "price": "198.19",
+      "stock": 1,
+      "description": "New yellow Salad with ergonomic design for old-fashioned comfort"
+    },
+    {
+      "id": 7314,
+      "name": "Ergonomic Granite Shoes",
+      "category": "Health & Beauty",
+      "price": "435.85",
+      "stock": 2,
+      "description": "Professional-grade Cheese perfect for flustered training and recreational use"
+    },
+    {
+      "id": 8479,
+      "name": "Fresh Bamboo Mouse",
+      "category": "Gadgets for Kids",
+      "price": "55.39",
+      "stock": 1,
+      "description": "Awesome Computer designed with Aluminum for intelligent performance"
+    },
+    {
+      "id": 4073,
+      "name": "Modern Ceramic Shoes",
+      "category": "Musical Instruments",
+      "price": "256.09",
+      "stock": 19,
+      "description": "Discover the another new Chair with an exciting mix of Wooden ingredients"
+    },
+    {
+      "id": 9915,
+      "name": "Licensed Cotton Tuna",
+      "category": "Clothing",
+      "price": "433.09",
+      "stock": 8,
+      "description": "Discover the svelte new Bike with an exciting mix of Aluminum ingredients"
+    },
+    {
+      "id": 1761,
+      "name": "Elegant Concrete Cheese",
+      "category": "Jewelry & Watches",
+      "price": "472.85",
+      "stock": 15,
+      "description": "Experience the pink brilliance of our Shirt, perfect for silky environments"
+    },
+    {
+      "id": 5088,
+      "name": "Frozen Wooden Hat",
+      "category": "Tools & Home Improvement",
+      "price": "259.99",
+      "stock": 14,
+      "description": "The Business-focused mobile approach Ball offers reliable performance and coordinated design"
+    },
+    {
+      "id": 1320,
+      "name": "Generic Gold Chicken",
+      "category": "Office Supplies",
+      "price": "488.60",
+      "stock": 7,
+      "description": "Our salty-inspired Chicken brings a taste of luxury to your distorted lifestyle"
+    },
+    {
+      "id": 3858,
+      "name": "Handcrafted Plastic Pants",
+      "category": "Gifts",
+      "price": "401.88",
+      "stock": 19,
+      "description": "Experience the yellow brilliance of our Shirt, perfect for mysterious environments"
+    },
+    {
+      "id": 6087,
+      "name": "Electronic Silk Towels",
+      "category": "Jewelry & Watches",
+      "price": "28.19",
+      "stock": 6,
+      "description": "The purple Tuna combines Nigeria aesthetics with Carbon-based durability"
+    },
+    {
+      "id": 6160,
+      "name": "Practical Metal Soap",
+      "category": "Office Supplies",
+      "price": "481.55",
+      "stock": 19,
+      "description": "Our fish-friendly Fish ensures optimistic comfort for your pets"
+    },
+    {
+      "id": 5687,
+      "name": "Fantastic Bronze Salad",
+      "category": "Clothing",
+      "price": "327.69",
+      "stock": 1,
+      "description": "Professional-grade Towels perfect for useless training and recreational use"
+    },
+    {
+      "id": 8907,
+      "name": "Incredible Gold Hat",
+      "category": "Grocery",
+      "price": "419.25",
+      "stock": 14,
+      "description": "Our juicy-inspired Car brings a taste of luxury to your nervous lifestyle"
+    },
+    {
+      "id": 3361,
+      "name": "Incredible Silk Gloves",
+      "category": "Jewelry & Watches",
+      "price": "72.69",
+      "stock": 20,
+      "description": "Our whale-friendly Hat ensures ambitious comfort for your pets"
+    },
+    {
+      "id": 6485,
+      "name": "Luxurious Cotton Computer",
+      "category": "Home & Garden",
+      "price": "183.55",
+      "stock": 18,
+      "description": "Stylish Gloves designed to make you stand out with blaring looks"
+    },
+    {
+      "id": 629,
+      "name": "Licensed Bronze Shirt",
+      "category": "Books",
+      "price": "226.75",
+      "stock": 17,
+      "description": "New Soap model with 95 GB RAM, 767 GB storage, and nippy features"
+    },
+    {
+      "id": 9339,
+      "name": "Practical Bronze Gloves",
+      "category": "Kitchenware & Dining Sets",
+      "price": "308.75",
+      "stock": 19,
+      "description": "The pink Mouse combines Jersey aesthetics with Tin-based durability"
+    },
+    {
+      "id": 4565,
+      "name": "Soft Wooden Pants",
+      "category": "Musical Instruments",
+      "price": "165.75",
+      "stock": 3,
+      "description": "Discover the stingy new Ball with an exciting mix of Concrete ingredients"
+    },
+    {
+      "id": 2014,
+      "name": "Elegant Plastic Pants",
+      "category": "Clothing",
+      "price": "499.42",
+      "stock": 8,
+      "description": "Savor the crispy essence in our Pants, designed for punctual culinary adventures"
+    },
+    {
+      "id": 5673,
+      "name": "Small Metal Chair",
+      "category": "Automotive Accessories",
+      "price": "422.85",
+      "stock": 15,
+      "description": "Featuring Meitnerium-enhanced technology, our Computer offers unparalleled lost performance"
+    },
+    {
+      "id": 5654,
+      "name": "Soft Aluminum Salad",
+      "category": "Home & Garden",
+      "price": "464.89",
+      "stock": 1,
+      "description": "Savor the savory essence in our Sausages, designed for majestic culinary adventures"
     }
   ]
 }
