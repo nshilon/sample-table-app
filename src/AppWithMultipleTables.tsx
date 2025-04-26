@@ -65,7 +65,7 @@ function AppWithMultipleTables() {
                             enableSorting: true,
                             enablePagination: true,
                             enableGlobalFilter: true,
-                            enableColumnFilters: true,
+                            // enableColumnFilters: true,
                             initialPageSize: 10,
                             initialSorting: initialPersonSorting
                         }}
@@ -79,7 +79,7 @@ function AppWithMultipleTables() {
                             enableSorting: true,
                             enablePagination: true,
                             // enableGlobalFilter: true,
-                            // enableColumnFilters: true,
+                            enableColumnFilters: true,
                             initialPageSize: 10,
                             initialSorting: initialProductSorting
                         }}
