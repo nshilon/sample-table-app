@@ -45,6 +45,8 @@ export const getCacheKey = (options: Options): string => {
     return `${sortKey}|${pageKey}|${filterKey}|${columnFilterKey}`;
 };
 
+const baseApiUrl = import.meta.env.VITE_API_URL
+
 // Function to fetch users
 export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
     // Generate cache key
@@ -55,7 +57,8 @@ export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
         return dataCache.get(cacheKey)!;
     }
 
-    let url = 'http://localhost:3001/users?';
+
+    let url = `${baseApiUrl}/users?`;
 
     if (options.sorting) {
         if (!url.endsWith('?')) {
