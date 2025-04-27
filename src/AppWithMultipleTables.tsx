@@ -77,7 +77,6 @@ function AppWithMultipleTables() {
                             enablePagination: true,
                             enableGlobalFilter: true,
                             // enableColumnFilters: true,
-                            initialPageSize: 10,
                         }}
                     />
                 </div>
@@ -86,14 +85,16 @@ function AppWithMultipleTables() {
                     <ProductTable
                         options={{
                             sorting: initialProductSorting,
-                        }
-                        }
+                            pagination: {
+                                pageIndex: 0,
+                                pageSize: 15,
+                            },
+                        }}
                         features={{
                             enableSorting: true,
                             enablePagination: true,
                             // enableGlobalFilter: true,
                             enableColumnFilters: true,
-                            initialPageSize: 10,
                         }}
                     />
                 </div>
