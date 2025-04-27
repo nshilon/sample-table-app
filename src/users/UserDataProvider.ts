@@ -1,8 +1,9 @@
 import type {User, UserResponse} from "./types.ts";
-import {BaseDataProvider, createDataCache} from "@/components/data-table/provider";
+import {createDataCache} from "@/components/data-table/provider";
+import {JsonServerBaseDataProvider} from "@/components/data-table/provider/jsonServerBaseDataProvider.ts";
 
 // Initial empty response for persons
-export const initialPersonResponse: UserResponse = {
+export const initialResponse: UserResponse = {
 	first: 0,
 	prev: 0,
 	next: 0,
@@ -17,9 +18,8 @@ const BASE_API_URL = import.meta.env.VITE_API_URL;
 /**
  * Person-specific implementation of DataProvider
  */
-export class UserDataProvider extends BaseDataProvider<
-	User,
-	UserResponse
+export class UserDataProvider extends JsonServerBaseDataProvider<
+	User
 > {
 	/**
 	 * Creates a new PersonDataProvider
@@ -33,37 +33,7 @@ export class UserDataProvider extends BaseDataProvider<
 			"users",
 			"first_name",
 		);
-		super(personCache, initialPersonResponse);
-	}
-
-	/**
-	 * Extracts row data from the person response
-	 *
-	 * @param response Person API response
-	 * @returns Array of person items
-	 */
-	getRowData(response: UserResponse): User[] {
-		return response.data;
-	}
-
-	/**
-	 * Gets the total count of rows from the person response
-	 *
-	 * @param response Person API response
-	 * @returns Total number of items
-	 */
-	getRowCount(response: UserResponse): number {
-		return response.items;
-	}
-
-	/**
-	 * Gets the total number of pages from the person response
-	 *
-	 * @param response Person API response
-	 * @returns Total number of pages
-	 */
-	getPageCount(response: UserResponse): number {
-		return response.pages;
+		super(personCache, initialResponse);
 	}
 
 	// /**
