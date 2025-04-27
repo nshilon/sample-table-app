@@ -1,5 +1,6 @@
 import type {Product, ProductResponse} from "./types.ts";
-import {BaseDataProvider, createDataCache} from "@/components/data-table/provider";
+import {createDataCache} from "@/components/data-table/provider";
+import {JsonServerBaseDataProvider} from "@/components/data-table/provider/jsonServerBaseDataProvider.ts";
 
 
 // Initial empty response for products
@@ -18,9 +19,8 @@ const BASE_API_URL = import.meta.env.VITE_API_URL;
 /**
  * Product-specific implementation of DataProvider
  */
-export class ProductDataProvider extends BaseDataProvider<
-	Product,
-	ProductResponse
+export class ProductDataProvider extends JsonServerBaseDataProvider<
+	Product
 > {
 	/**
 	 * Creates a new ProductDataProvider
@@ -35,36 +35,6 @@ export class ProductDataProvider extends BaseDataProvider<
 			"name",
 		);
 		super(productCache, initialProductResponse);
-	}
-
-	/**
-	 * Extracts row data from the product response
-	 *
-	 * @param response Product API response
-	 * @returns Array of product items
-	 */
-	getRowData(response: ProductResponse): Product[] {
-		return response.data;
-	}
-
-	/**
-	 * Gets the total count of rows from the product response
-	 *
-	 * @param response Product API response
-	 * @returns Total number of items
-	 */
-	getRowCount(response: ProductResponse): number {
-		return response.items;
-	}
-
-	/**
-	 * Gets the total number of pages from the product response
-	 *
-	 * @param response Product API response
-	 * @returns Total number of pages
-	 */
-	getPageCount(response: ProductResponse): number {
-		return response.pages;
 	}
 
 	/**

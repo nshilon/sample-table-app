@@ -14,8 +14,7 @@ export class JsonServerBaseDataProvider<TData> extends BaseDataProvider<
 	TData,
 	TResponse<TData>
 > {
-
-		/**
+	/**
 	 * Extracts row data from the person response
 	 *
 	 * @param response Person API response
