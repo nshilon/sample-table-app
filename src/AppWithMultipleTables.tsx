@@ -1,10 +1,9 @@
 import "./App.css";
-import {
-	ProductTable,
-} from "./ProductTable.tsx";
+
 import { useState } from "react";
-import {TableSortingState} from "./DataTable.tsx";
+import type {TableSortingState} from "./DataTable.tsx";
 import {PersonTable} from "./users";
+import {ProductTable} from "./products";
 
 function AppWithMultipleTables() {
 	// Define initial sorting states
