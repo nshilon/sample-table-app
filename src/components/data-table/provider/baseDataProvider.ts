@@ -1,5 +1,5 @@
 import type { DataCache, FetchOptions } from "./dataCache";
-import type { DataProvider } from "./dataProvider";
+import type { DataProvider } from "../dataProvider";
 import type { TableOptions } from "../DataTable";
 
 /**

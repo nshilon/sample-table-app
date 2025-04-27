@@ -1,10 +1,10 @@
 import {
 	DataTable,
-	type ExtendedColumnDef,
+	type ExtendedColumnDef, TableOptions,
 	type TableSortingState,
-} from "../DataTable";
-import { debounce } from "../lib/utils";
-import type { FetchOptions } from "../lib/dataCache";
+} from "@/components/data-table";
+import { debounce } from "@/lib/utils";
+
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
 import { ProductDataProvider } from "./ProductDataProvider";
@@ -12,16 +12,7 @@ import type {Product, ProductResponse} from "./types.ts";
 
 
 
-// Use FetchOptions from dataCache
-export type Options = FetchOptions;
-
 const baseApiUrl = import.meta.env.VITE_API_URL;
-
-// Function to prefetch initial data
-export const prefetchInitialData = () => {
-	const provider = new ProductDataProvider(baseApiUrl);
-	return provider.prefetchInitialData();
-};
 
 // Define columns for Product data
 export const productColumns: ExtendedColumnDef<
@@ -122,7 +113,7 @@ export const ProductTable = ({
 	features,
 	children,
 }: {
-	options?: Options;
+	options?: TableOptions;
 	features?: {
 		enableSorting?: boolean;
 		enablePagination?: boolean;
@@ -150,4 +141,3 @@ export const ProductTable = ({
 	);
 };
 
-export default ProductTable;

@@ -1,4 +1,4 @@
-import type { TableOptions } from "../DataTable";
+import type { TableOptions } from "./DataTable";
 
 /**
  * Generic DataProvider interface that defines the contract for data operations

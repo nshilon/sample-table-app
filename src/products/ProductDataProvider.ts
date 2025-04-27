@@ -1,7 +1,6 @@
-import { BaseDataProvider } from "../lib/baseDataProvider";
-
-import { createDataCache } from "../lib/dataCache";
 import type {Product, ProductResponse} from "./types.ts";
+import {BaseDataProvider, createDataCache} from "@/components/data-table/provider";
+
 
 // Initial empty response for products
 export const initialProductResponse: ProductResponse = {

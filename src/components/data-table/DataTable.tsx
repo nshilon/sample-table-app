@@ -17,8 +17,11 @@ import {
 	useState,
 	useTransition,
 } from "react";
-import { deepMerge } from "./lib/utils.tsx";
-import type { DataProvider } from "./lib/dataProvider";
+
+
+import Button from "@/components/button";
+import {deepMerge} from "@/lib/utils.tsx";
+import {DataProvider} from "./dataProvider.ts";
 
 // Generic type for table options
 export type TableOptions = {
@@ -271,8 +274,7 @@ export function DataTable<TData, TResponse>({
 													: {}),
 											}}
 										>
-											<button
-												type="button"
+											<Button
 												onClick={header.column.getToggleSortingHandler()}
 												style={{
 													height: "1rem",
@@ -302,7 +304,7 @@ export function DataTable<TData, TResponse>({
 														{header.column.getSortIndex() + 1}
 													</sup>
 												) : null}
-											</button>
+											</Button>
 
 											{/* Render custom filter component if provided */}
 											{table.options.manualFiltering &&
@@ -335,38 +337,37 @@ export function DataTable<TData, TResponse>({
 					<tfoot>
 						<tr>
 							<td colSpan={columns.length}>
-								<button
-									type="button"
+								<Button
+
 									onClick={() => table.setPageIndex(0)}
 									disabled={!table.getCanPreviousPage()}
 								>
 									{"<<"}
-								</button>
-								<button
-									type="button"
+								</Button>
+								<Button
+
 									onClick={() => table.previousPage()}
 									disabled={!table.getCanPreviousPage()}
 								>
 									{"<"}
-								</button>
+								</Button>
 								<small>
 									page {table.getState().pagination.pageIndex + 1} of{" "}
 									{pageCount} pages, total items {rowCount}
 								</small>
-								<button
-									type="button"
+								<Button
+
 									onClick={() => table.nextPage()}
 									disabled={!table.getCanNextPage()}
 								>
 									{">"}
-								</button>
-								<button
-									type="button"
+								</Button>
+								<Button
 									onClick={() => table.setPageIndex(table.getPageCount() - 1)}
 									disabled={!table.getCanNextPage()}
 								>
 									{">>"}
-								</button>
+								</Button>
 							</td>
 						</tr>
 						<tr>
@@ -379,4 +380,4 @@ export function DataTable<TData, TResponse>({
 	);
 }
 
-export default DataTable;
+

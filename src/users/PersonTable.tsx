@@ -1,19 +1,15 @@
 import {
 	DataTable,
-	type ExtendedColumnDef,
+	type ExtendedColumnDef, TableOptions,
 	type TableSortingState,
-} from "../DataTable";
+} from "@/components/data-table";
 import { debounce } from "../lib/utils";
-import type { FetchOptions } from "../lib/dataCache";
+
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
 import { PersonDataProvider } from "./PersonDataProvider";
 import type {Person, PersonResponse} from "./types.ts";
 
-
-
-// Use FetchOptions from dataCache
-export type Options = FetchOptions;
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 
@@ -123,7 +119,7 @@ export const PersonTable = ({
 	features,
 	children,
 }: {
-	options?: Options;
+	options?: TableOptions;
 	features?: {
 		enableSorting?: boolean;
 		enablePagination?: boolean;

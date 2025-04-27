@@ -24,8 +24,11 @@
 		"@types/react-dom": "^19.0.4",
 		"@vitejs/plugin-react": "^4.3.4",
 		"globals": "^16.0.0",
+		"i": "^0.3.7",
+		"npm": "^11.3.0",
 		"typescript": "~5.7.2",
 		"vite": "^6.3.1",
+		"vite-tsconfig-paths": "^5.1.4",
 		"yargs": "^17.7.2"
 	}
 }
