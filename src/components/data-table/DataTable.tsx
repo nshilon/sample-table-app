@@ -96,15 +96,13 @@ export function DataTable<TData, TResponse>({
     );
 
     // Create a TableOptions object from internal state
-    const internalOptions = {
+    // Use provided options or internal state
+    const tableOptions = {
         pagination,
         sorting,
         globalFilter,
         columnFilters,
     };
-
-    // Use provided options or internal state
-    const tableOptions = options || internalOptions;
 
     // Keep a reference to the latest options to use in effects
     const latestOptionsRef = useRef(tableOptions);
@@ -112,7 +110,7 @@ export function DataTable<TData, TResponse>({
 
     // Function to get current data based on internal state
     const getCurrentData = () => {
-        return dataProvider.fetchData(options || internalOptions);
+        return dataProvider.fetchData(tableOptions);
     };
 
     // Handle internal state changes
@@ -190,7 +188,7 @@ export function DataTable<TData, TResponse>({
         deepMerge(baseTableOptions, {
             manualPagination: true,
             state: {
-                pagination: options?.pagination || pagination,
+                pagination
             },
             onPaginationChange: handlePaginationChange,
         });
@@ -202,7 +200,7 @@ export function DataTable<TData, TResponse>({
             manualSorting: true,
             maxMultiSortColCount: 3,
             state: {
-                sorting: options?.sorting || sorting,
+                sorting
             },
             onSortingChange: handleSortingChange,
         });
@@ -213,7 +211,7 @@ export function DataTable<TData, TResponse>({
             enableGlobalFilter: true,
             manualGlobalFilter: true,
             state: {
-                globalFilter: options?.globalFilter || globalFilter,
+                globalFilter
             },
             onGlobalFilterChange: handleGlobalFilterChange,
         });
@@ -223,7 +221,7 @@ export function DataTable<TData, TResponse>({
         deepMerge(baseTableOptions, {
             manualFiltering: true,
             state: {
-                columnFilters: options?.columnFilters || columnFilters,
+                columnFilters
             },
             onColumnFiltersChange: handleColumnFiltersChange,
         });
