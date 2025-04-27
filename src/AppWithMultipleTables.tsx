@@ -31,12 +31,6 @@ function AppWithMultipleTables() {
         "users",
     );
 
-    // Prefetch initial data when component mounts
-    // useEffect(() => {
-    // 	prefetchPersonData();
-    // 	prefetchProductData();
-    // }, []);
-
     return (
         <div>
             <div style={{marginBottom: "20px"}}>
