@@ -5,8 +5,7 @@ import {
     flexRender,
     getCoreRowModel,
     type OnChangeFn,
-    type PaginationState,
-    type SortingState,
+    type PaginationState, SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -26,7 +25,7 @@ import {DataTablePagination} from "@/components/data-table/DataTablePagination.t
 
 // Generic type for table options
 export type TableOptions = {
-    sorting?: TableSortingState;
+    sorting?: SortingState;
     pagination?: PaginationState;
     columnFilters?: ColumnFiltersState;
     globalFilter?: string;
@@ -50,8 +49,6 @@ type ColumnMeta<TData> = {
 export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     meta?: ColumnMeta<TData>;
 };
-
-export type TableSortingState = SortingState;
 
 // Generic DataTable component
 export function DataTable<TData, TResponse>({
@@ -82,13 +79,13 @@ export function DataTable<TData, TResponse>({
     );
 
     // Internal state management for table features
-    const [pagination, setPagination] = useState<PaginationState>(
+    const [pagination, setPagination] = useState<TableOptions['pagination']>(
         options?.pagination || {
             pageIndex: 0,
             pageSize: features.initialPageSize || 10,
         },
     );
-    const [sorting, setSorting] = useState<TableSortingState>(
+    const [sorting, setSorting] = useState<TableOptions["sorting"]>(
         options?.sorting || [],
     );
     const [globalFilter, setGlobalFilter] = useState<string>(
@@ -119,13 +116,13 @@ export function DataTable<TData, TResponse>({
     };
 
     // Handle internal state changes
-    const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
+    const handlePaginationChange: OnChangeFn<TableOptions["pagination"]> = (updater) => {
         const newPagination =
             typeof updater === "function" ? updater(pagination) : updater;
         setPagination(newPagination);
     };
 
-    const handleSortingChange: OnChangeFn<TableSortingState> = (updater) => {
+    const handleSortingChange: OnChangeFn<TableOptions["sorting"]> = (updater) => {
         const newSorting =
             typeof updater === "function" ? updater(sorting) : updater;
         setSorting(newSorting);
