@@ -19,8 +19,7 @@ import type {User, UserResponse} from "./types.ts";
 
 // Define columns for Person data
 export const personColumns: TableColumnDef<
-	User,
-	{ filterComponent: any }
+	User
 >[] = [
 	{
 		accessorKey: "first_name",

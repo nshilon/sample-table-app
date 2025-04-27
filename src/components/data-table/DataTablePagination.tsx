@@ -20,8 +20,7 @@ export function DataTablePagination<TData>() {
                 {"<"}
             </Button>
             <small>
-                page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.options.pageCount}
+                page {table.getState().pagination.pageIndex + 1} of {table.options.pageCount}
             </small>
             <Button
 

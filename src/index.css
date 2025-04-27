@@ -81,8 +81,8 @@ table, .table {
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		top: 0;
 		tr, .tr {
-			display: flex;
-			flex-direction: row;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 			th, .th {
 				padding: 0 0.5rem;
 				border-bottom: 1px solid #ccc;
@@ -93,14 +93,15 @@ table, .table {
 
 	tbody, .tbody {
 		tr, .tr {
-			display: flex;
-			flex-direction: row;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			overflow: hidden;
 			td, .td {
 				padding: 0 0.5rem;
 				border-bottom: 1px solid #ccc;
 				border-right: 1px solid #ccc;
 				text-align: start;
-				max-width: 25vw;
+
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
@@ -108,6 +109,11 @@ table, .table {
 			}
 		}
 	}
+}
+
+#root {
+	width: 90%;
+	margin: 0 auto;
 }
 
 

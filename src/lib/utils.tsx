@@ -36,10 +36,14 @@ export const useResize = (element: RefObject<HTMLElement | null>) => {
             if (entries && entries.length > 0) {
                 const entry = entries[0];
                 setSize({innerWidth: entry.contentRect.width, innerHeight: entry.contentRect.height});
+
+                console.log(entry.contentRect.width, entry.contentRect.height);
             }
         });
 
         if (!element.current) return;
+
+        console.log(element.current.className);
 
         // else
         resizeObserver.observe(element.current);
@@ -47,7 +51,7 @@ export const useResize = (element: RefObject<HTMLElement | null>) => {
         return () => {
             resizeObserver.disconnect();
         }
-    }, [element]);
+    }, [element.current]);
 
     return size;
 }

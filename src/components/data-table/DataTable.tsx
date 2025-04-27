@@ -79,6 +79,11 @@ export function DataTable<TData, TResponse>({
     // Use transition to avoid showing the Suspense fallback during transitions
     const [isPending, startTransition] = useTransition();
 
+
+    const tableRef = useRef<HTMLDivElement>(null)
+
+    const size = useResize( tableRef );
+
     // Keep track of the latest data
     const [currentData, setCurrentData] = useState<TResponse>(
         dataProvider.getInitialData(),
@@ -236,30 +241,30 @@ export function DataTable<TData, TResponse>({
     const table = useReactTable<TData>(baseTableOptions);
 
     return (
-        <DataTableContext.Provider value={{table, isPending}}>
+        <DataTableContext.Provider value={{table, isPending, size}}>
+            <div className="table" style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}} ref={tableRef}>
+                {
+                    children ? children :
+                        <>
+                            {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
+                            <DataTable.Header/>
+                            <DataTable.Body />
+                            {table.options.manualPagination && <DataTablePagination/>}
+                        </>
 
-            <div className="table" style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}}>
-        {
-            children ? children :
-                <>
-                {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
-                <DataTable.Header/>
-                <DataTable.Body/>
-                {table.options.manualPagination && <DataTablePagination/>}
-            </>
-
-        }</div>;
+                }
+            </div>
         </DataTableContext.Provider>
     )
-        ;
 }
 
 DataTable.Header = function <TData>() {
     const {table} = useDataTable();
-    return <div className="thead">{table.getHeaderGroups().map((headerGroup) => (
-        <div key={headerGroup.id} className='tr'>
+    return (<div className="thead">{
+        table.getHeaderGroups().map((headerGroup) => (
+            <div key={headerGroup.id} className='tr'>
             {headerGroup.headers.map((header) => (
-                <div key={header.id} className="th" style={{width: header.getSize()}}>
+                <div key={header.id} className="th" >
                     {header.isPlaceholder ? null : (
                         <div
                             style={{
@@ -316,18 +321,14 @@ DataTable.Header = function <TData>() {
                 </div>
             ))}
         </div>
-    ))}</div>;
+        ))}
+    </div>);
 }
 
 DataTable.Body = function () {
     const {table} = useDataTable();
 
-    const bodyRef = useRef<HTMLDivElement>(null)
-
-
-    useResize( bodyRef );
-
-    return <div className="tbody" ref={bodyRef} >
+    return (<div className="tbody">
         {table.getRowModel().rows.map((row) => (
             <div key={row.id} className="tr">
                 {row.getVisibleCells().map((cell) => (
@@ -337,7 +338,7 @@ DataTable.Body = function () {
                 ))}
             </div>
         ))}
-    </div>;
+    </div>);
 }
 
 

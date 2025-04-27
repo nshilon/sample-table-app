@@ -1,5 +1,3 @@
-import "./App.css";
-
 import {useState} from "react";
 import type {TableOptions} from "@/components/data-table";
 import {UserTable} from "./users";
@@ -36,7 +34,7 @@ function AppWithMultipleTables() {
     const TotalItems = ()=> {
         const {table} = useDataTable();
 
-        return <b>total items {table.options.rowCount}</b>
+        return <b>total items {table.options.rowCount}</b>;
     }
 
 
