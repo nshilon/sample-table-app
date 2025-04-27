@@ -20,7 +20,7 @@ import {
 
 
 import Button from "@/components/button";
-import {deepMerge} from "@/lib/utils.tsx";
+import {deepMerge, useResize} from "@/lib/utils.tsx";
 import type {DataProvider} from "./dataProvider.ts";
 import {DataTablePagination} from "@/components/data-table/DataTablePagination.tsx";
 import {DataTableGlobalFilter} from "@/components/data-table/DataTableGlobalFilter.tsx";
@@ -42,19 +42,19 @@ export type DataTableFeatures = {
 };
 
 // Define a custom ColumnMeta type
-type ColumnMeta<TData> = {
+type WithColumnMeta<TData> = {
     filterComponent?: (column: Column<TData, any>) => JSX.Element;
 };
 
 // Extend ColumnDef to include the custom meta type
-export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-    meta?: ColumnMeta<TData>;
+export type TableColumnDef<TData> = ColumnDef<TData> & {
+    meta?: WithColumnMeta<TData>;
 };
 
 const DataTableContext = createContext({});
 
 export function useDataTable<TData>() {
-    return useContext(DataTableContext) as { table: Table<TData> };
+    return useContext(DataTableContext) as { table: Table<TData>, isPending: boolean };
 }
 
 // Generic DataTable component
@@ -70,7 +70,7 @@ export function DataTable<TData, TResponse>({
                                                 },
                                                 children,
                                             }: {
-    columns: TableColumnDef<TData, { filterComponent: any }>[];
+    columns: TableColumnDef<TData>[];
     options?: TableOptions;
     dataProvider: DataProvider<TData, TResponse>;
     features?: DataTableFeatures;
@@ -236,43 +236,19 @@ export function DataTable<TData, TResponse>({
     const table = useReactTable<TData>(baseTableOptions);
 
     return (
-        <DataTableContext.Provider value={{table}}>
+        <DataTableContext.Provider value={{table, isPending}}>
 
-            <div style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}}>
-                            { children ? children :
+            <div className="table" style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}}>
+        {
+            children ? children :
+                <>
+                {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
+                <DataTable.Header/>
+                <DataTable.Body/>
+                {table.options.manualPagination && <DataTablePagination/>}
+            </>
 
-
-                                (<>
-                {features.enableGlobalFilter && <DataTableGlobalFilter/>}
-                <table>
-                    <thead>
-                    <DataTable.Header/>
-                    </thead>
-                    <tbody>
-                    <DataTable.Body/>
-                    </tbody>
-                    <tfoot>
-                    {features.enablePagination && (
-                        <tr>
-                            <td colSpan={columns.length}>
-                                <DataTablePagination/>
-                            </td>
-                        </tr>
-
-                    )}
-
-                    {children && (
-                        <tr>
-
-                            <td colSpan={table.getVisibleFlatColumns().length}>{children}</td>
-                        </tr>
-                    )}
-
-                    </tfoot>
-                </table>
-                </>)
-                            }
-            </div>
+        }</div>;
         </DataTableContext.Provider>
     )
         ;
@@ -280,10 +256,10 @@ export function DataTable<TData, TResponse>({
 
 DataTable.Header = function <TData>() {
     const {table} = useDataTable();
-    return <>{table.getHeaderGroups().map((headerGroup) => (
-        <tr key={headerGroup.id}>
+    return <div className="thead">{table.getHeaderGroups().map((headerGroup) => (
+        <div key={headerGroup.id} className='tr'>
             {headerGroup.headers.map((header) => (
-                <th key={header.id}>
+                <div key={header.id} className="th" style={{width: header.getSize()}}>
                     {header.isPlaceholder ? null : (
                         <div
                             style={{
@@ -332,31 +308,36 @@ DataTable.Header = function <TData>() {
                                 header.column.getCanFilter() &&
                                 (
                                     header.column.columnDef as TableColumnDef<
-                                        TData,
-                                        any
+                                        TData
                                     >
                                 ).meta?.filterComponent?.(header.column as Column<TData, any>)}
                         </div>
                     )}
-                </th>
+                </div>
             ))}
-        </tr>
-    ))}</>;
+        </div>
+    ))}</div>;
 }
 
-DataTable.Body = function() {
+DataTable.Body = function () {
     const {table} = useDataTable();
-    return <>
+
+    const bodyRef = useRef<HTMLDivElement>(null)
+
+
+    useResize( bodyRef );
+
+    return <div className="tbody" ref={bodyRef} >
         {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
+            <div key={row.id} className="tr">
                 {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+                    <div key={cell.id} className="td" style={{width: cell.column.getSize(),minWidth: cell.column.getSize(), maxWidth: cell.column.getSize(), overflow: "hidden"}}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
+                    </div>
                 ))}
-            </tr>
+            </div>
         ))}
-    </>;
+    </div>;
 }
 
 

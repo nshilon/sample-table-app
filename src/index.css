@@ -67,36 +67,47 @@ button:focus-visible {
 	}
 }
 
-table {
+table, .table {
 	width: 100%;
 	border: 1px solid #ccc;
 	overflow-y: auto;
 	max-height: 80vh;
 	border-collapse: collapse;
-	thead {
+	thead, .thead {
 		margin: 0;
 		border-bottom: 1px solid #ccc;
 		position: sticky;
 		background-color: #f9f9f9;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		top: 0;
-		tr {
-			th {
+		tr, .tr {
+			display: flex;
+			flex-direction: row;
+			th, .th {
+				padding: 0 0.5rem;
 				border-bottom: 1px solid #ccc;
+				border-right: 1px solid #ccc;
 			}
 		}
 	}
 
-	tbody {
-		tr {
-			td {
+	tbody, .tbody {
+		tr, .tr {
+			display: flex;
+			flex-direction: row;
+			td, .td {
+				padding: 0 0.5rem;
 				border-bottom: 1px solid #ccc;
+				border-right: 1px solid #ccc;
 				text-align: start;
 				max-width: 25vw;
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
+
 			}
 		}
 	}
 }
+
+

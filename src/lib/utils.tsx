@@ -1,3 +1,5 @@
+import { RefObject, useEffect, useState} from "react";
+
 export const debounce = (func: any, delay: number) => {
     let timeoutId: any;
 
@@ -22,4 +24,30 @@ export const deepMerge = (target: any, source: any) => {
     }
 
     return target;
+}
+
+// use ResizeObserver, upon resize the given element size is updated
+export const useResize = (element: RefObject<HTMLElement | null>) => {
+
+    const [size, setSize] = useState({innerWidth: 0, innerHeight: 0});
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver((entries) => {
+            if (entries && entries.length > 0) {
+                const entry = entries[0];
+                setSize({innerWidth: entry.contentRect.width, innerHeight: entry.contentRect.height});
+            }
+        });
+
+        if (!element.current) return;
+
+        // else
+        resizeObserver.observe(element.current);
+
+        return () => {
+            resizeObserver.disconnect();
+        }
+    }, [element]);
+
+    return size;
 }
