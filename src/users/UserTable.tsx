@@ -138,6 +138,10 @@ export const UserTable = ({
 			dataProvider={dataProvider}
 			features={features}
 		>
+			{ features?.enableGlobalFilter && <DataTable.GlobalFilter/>}
+			<DataTable.Header/>
+			<DataTable.Body/>
+			{ features?.enablePagination && <DataTable.Pagination/> }
 			{children}
 		</DataTable>
 	);

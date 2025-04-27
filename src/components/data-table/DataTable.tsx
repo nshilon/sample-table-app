@@ -5,11 +5,12 @@ import {
     flexRender,
     getCoreRowModel,
     type OnChangeFn,
-    type PaginationState, SortingState,
+    type PaginationState, SortingState, Table,
     useReactTable,
 } from "@tanstack/react-table";
 import {
-    type JSX,
+    createContext,
+    type JSX, useContext,
     useDeferredValue,
     useEffect,
     useRef,
@@ -22,6 +23,7 @@ import Button from "@/components/button";
 import {deepMerge} from "@/lib/utils.tsx";
 import type {DataProvider} from "./dataProvider.ts";
 import {DataTablePagination} from "@/components/data-table/DataTablePagination.tsx";
+import {DataTableGlobalFilter} from "@/components/data-table/DataTableGlobalFilter.tsx";
 
 // Generic type for table options
 export type TableOptions = {
@@ -48,6 +50,12 @@ type ColumnMeta<TData> = {
 export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     meta?: ColumnMeta<TData>;
 };
+
+const DataTableContext = createContext({});
+
+export function useDataTable<TData>() {
+    return useContext(DataTableContext) as { table: Table<TData> };
+}
 
 // Generic DataTable component
 export function DataTable<TData, TResponse>({
@@ -228,125 +236,134 @@ export function DataTable<TData, TResponse>({
     const table = useReactTable<TData>(baseTableOptions);
 
     return (
-        <div style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}}>
-            {features.enableGlobalFilter && (
-                <div style={{marginBottom: "1rem"}}>
-                    <input
-                        placeholder="Search..."
-                        type="search"
-                        value={options?.globalFilter || globalFilter}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            handleGlobalFilterChange(value);
-                        }}
-                        style={{
-                            padding: "0.5rem",
-                            borderRadius: "4px",
-                            border: "1px solid #ccc",
-                            width: "100%",
-                            maxWidth: "300px",
-                        }}
-                    />
-                </div>
-            )}
-            <table>
-                <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => (
-                            <th key={header.id}>
-                                {header.isPlaceholder ? null : (
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: ".2rem",
-                                            ...(header.column.getCanSort()
-                                                ? {cursor: "pointer"}
-                                                : {}),
-                                        }}
-                                    >
-                                        <Button
-                                            onClick={header.column.getToggleSortingHandler()}
-                                            style={{
-                                                height: "1rem",
-                                                lineHeight: "1rem",
-                                                padding: "0 .25rem",
-                                                outline: "none",
-                                                border: "none",
-                                                background: "none",
-                                                cursor: "pointer",
-                                            }}
-                                        >
-                                            {flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext(),
-                                            )}
-                                            {header.column.getCanSort()
-                                                ? header.column.getIsSorted()
-                                                    ? header.column.getIsSorted() === "desc"
-                                                        ? "🔻"
-                                                        : "🔺"
-                                                    : ""
-                                                : null}
-                                            {header.column.getCanSort() &&
-                                            header.column.getIsSorted() &&
-                                            table.getState().sorting.length > 1 ? (
-                                                <sup style={{fontSize: ".5rem"}}>
-                                                    {header.column.getSortIndex() + 1}
-                                                </sup>
-                                            ) : null}
-                                        </Button>
+        <DataTableContext.Provider value={{table}}>
 
-                                        {/* Render custom filter component if provided */}
-                                        {table.options.manualFiltering &&
-                                            header.column.getCanFilter() &&
-                                            (
-                                                header.column.columnDef as TableColumnDef<
-                                                    TData,
-                                                    any
-                                                >
-                                            ).meta?.filterComponent?.(header.column)}
-                                    </div>
-                                )}
-                            </th>
-                        ))}
-                    </tr>
-                ))}
-                </thead>
-                <tbody>
-                {table.getRowModel().rows.map((row) => (
-                    <tr key={row.id}>
-                        {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id}>
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <div style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}}>
+                            { children ? children :
+
+
+                                (<>
+                {features.enableGlobalFilter && <DataTableGlobalFilter/>}
+                <table>
+                    <thead>
+                    <DataTable.Header/>
+                    </thead>
+                    <tbody>
+                    <DataTable.Body/>
+                    </tbody>
+                    <tfoot>
+                    {features.enablePagination && (
+                        <tr>
+                            <td colSpan={columns.length}>
+                                <DataTablePagination/>
                             </td>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-                <tfoot>
-                {features.enablePagination && (
-                    <tr>
-                        <td colSpan={columns.length}>
-                            <DataTablePagination table={table}/>
-                        </td>
-                    </tr>
+                        </tr>
 
-                )}
+                    )}
 
-                {children && (
-                    <tr>
+                    {children && (
+                        <tr>
 
-                        <td colSpan={table.getVisibleFlatColumns().length}>{children}</td>
-                    </tr>
-                )}
+                            <td colSpan={table.getVisibleFlatColumns().length}>{children}</td>
+                        </tr>
+                    )}
 
-                </tfoot>
-            </table>
-        </div>
+                    </tfoot>
+                </table>
+                </>)
+                            }
+            </div>
+        </DataTableContext.Provider>
     )
         ;
 }
+
+DataTable.Header = function <TData>() {
+    const {table} = useDataTable();
+    return <>{table.getHeaderGroups().map((headerGroup) => (
+        <tr key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                    {header.isPlaceholder ? null : (
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: ".2rem",
+                                ...(header.column.getCanSort()
+                                    ? {cursor: "pointer"}
+                                    : {}),
+                            }}
+                        >
+                            <Button
+                                onClick={header.column.getToggleSortingHandler()}
+                                style={{
+                                    height: "1rem",
+                                    lineHeight: "1rem",
+                                    padding: "0 .25rem",
+                                    outline: "none",
+                                    border: "none",
+                                    background: "none",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                )}
+                                {header.column.getCanSort()
+                                    ? header.column.getIsSorted()
+                                        ? header.column.getIsSorted() === "desc"
+                                            ? "🔻"
+                                            : "🔺"
+                                        : ""
+                                    : null}
+                                {header.column.getCanSort() &&
+                                header.column.getIsSorted() &&
+                                table.getState().sorting.length > 1 ? (
+                                    <sup style={{fontSize: ".5rem"}}>
+                                        {header.column.getSortIndex() + 1}
+                                    </sup>
+                                ) : null}
+                            </Button>
+
+                            {/* Render custom filter component if provided */}
+                            {table.options.manualFiltering &&
+                                header.column.getCanFilter() &&
+                                (
+                                    header.column.columnDef as TableColumnDef<
+                                        TData,
+                                        any
+                                    >
+                                ).meta?.filterComponent?.(header.column as Column<TData, any>)}
+                        </div>
+                    )}
+                </th>
+            ))}
+        </tr>
+    ))}</>;
+}
+
+DataTable.Body = function() {
+    const {table} = useDataTable();
+    return <>
+        {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                ))}
+            </tr>
+        ))}
+    </>;
+}
+
+
+DataTable.GlobalFilter = DataTableGlobalFilter;
+
+DataTable.Pagination = DataTablePagination;
+
+DataTable.displayName = "DataTable";
 
 

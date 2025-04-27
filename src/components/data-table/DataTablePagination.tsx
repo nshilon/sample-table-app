@@ -1,15 +1,12 @@
 import Button from "@/components/button.tsx";
-import {Table} from "@tanstack/react-table";
+import {useDataTable} from "@/components/data-table/DataTable.tsx";
 
-export function DataTablePagination<TData>({
-                                               table,
-                                           }: {
-    table: Table<TData>;
-}) {
+export function DataTablePagination<TData>() {
+
+    const {table} = useDataTable<TData>();
 
     return (<>
             <Button
-
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
             >
@@ -24,7 +21,7 @@ export function DataTablePagination<TData>({
             </Button>
             <small>
                 page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.options.pageCount} pages, total items {table.options.rowCount}
+                {table.options.pageCount}
             </small>
             <Button
 

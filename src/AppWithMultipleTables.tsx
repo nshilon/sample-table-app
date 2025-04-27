@@ -5,6 +5,7 @@ import type {TableOptions} from "@/components/data-table";
 import {UserTable} from "./users";
 import {ProductTable} from "./products";
 import Button from "@/components/button.tsx";
+import {useDataTable} from "@/components/data-table/DataTable.tsx";
 
 function AppWithMultipleTables() {
     // Define initial sorting states
@@ -30,6 +31,14 @@ function AppWithMultipleTables() {
     const [activeTable, setActiveTable] = useState<"users" | "products">(
         "users",
     );
+
+
+    const TotalItems = ()=> {
+        const {table} = useDataTable();
+
+        return <b>total items {table.options.rowCount}</b>
+    }
+
 
     return (
         <div>
@@ -73,7 +82,10 @@ function AppWithMultipleTables() {
                             enableGlobalFilter: true,
                             // enableColumnFilters: true,
                         }}
-                    />
+                    >
+                        <em style={{color: "green"}}>this is a customized table</em>
+                        <TotalItems />
+                    </UserTable>
                 </div>
             ) : (
                 <div>
