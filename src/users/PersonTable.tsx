@@ -2,44 +2,26 @@ import {
 	DataTable,
 	type ExtendedColumnDef,
 	type TableSortingState,
-} from "./DataTable";
-import { debounce } from "./lib/utils";
-import type { FetchOptions } from "./lib/dataCache";
+} from "../DataTable";
+import { debounce } from "../lib/utils";
+import type { FetchOptions } from "../lib/dataCache";
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
-import { PersonDataProvider } from "./providers/PersonDataProvider";
+import { PersonDataProvider } from "./PersonDataProvider";
+import {Person, PersonResponse} from "./types.ts";
 
-// Person type definition
-export type Person = {
-	id: number;
-	first_name: string;
-	last_name: string;
-	email: string;
-	gender: string;
-	ip_address: string;
-};
 
-// Response type for Person data
-export type PersonResponse = {
-	first: number;
-	prev: number;
-	next: number;
-	last: number;
-	pages: number;
-	items: number;
-	data: Person[];
-};
 
 // Use FetchOptions from dataCache
 export type Options = FetchOptions;
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 
-// Function to prefetch initial data
-export const prefetchInitialData = () => {
-	const provider = new PersonDataProvider(baseApiUrl);
-	return provider.prefetchInitialData();
-};
+// // Function to prefetch initial data
+// export const prefetchInitialData = () => {
+// 	const provider = new PersonDataProvider(baseApiUrl);
+// 	return provider.prefetchInitialData();
+// };
 
 // Define columns for Person data
 export const personColumns: ExtendedColumnDef<
@@ -169,4 +151,3 @@ export const PersonTable = ({
 	);
 };
 
-export default PersonTable;

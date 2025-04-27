@@ -1,6 +1,7 @@
 import { BaseDataProvider } from "../lib/baseDataProvider";
-import type { Person, PersonResponse } from "../PersonTable";
+
 import { createDataCache } from "../lib/dataCache";
+import {Person, PersonResponse} from "./types.ts";
 
 // Initial empty response for persons
 export const initialPersonResponse: PersonResponse = {
@@ -65,14 +66,14 @@ export class PersonDataProvider extends BaseDataProvider<
 		return response.pages;
 	}
 
-	/**
-	 * Prefetches initial data with default sorting
-	 *
-	 * @returns Promise resolving to the initial data
-	 */
-	prefetchInitialData() {
-		return this.dataCache.prefetchInitialData({
-			sorting: [{ id: "first_name", desc: false }],
-		});
-	}
+	// /**
+	//  * Prefetches initial data with default sorting
+	//  *
+	//  * @returns Promise resolving to the initial data
+	//  */
+	// prefetchInitialData() {
+	// 	return this.dataCache.prefetchInitialData({
+	// 		sorting: [{ id: "first_name", desc: false }],
+	// 	});
+	// }
 }

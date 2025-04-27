@@ -1,14 +1,10 @@
 import "./App.css";
 import {
-	PersonTable,
-	prefetchInitialData as prefetchPersonData,
-} from "./PersonTable.tsx";
-import {
 	ProductTable,
-	prefetchInitialData as prefetchProductData,
 } from "./ProductTable.tsx";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {TableSortingState} from "./DataTable.tsx";
+import {PersonTable} from "./users";
 
 function AppWithMultipleTables() {
 	// Define initial sorting states
@@ -32,10 +28,10 @@ function AppWithMultipleTables() {
 	);
 
 	// Prefetch initial data when component mounts
-	useEffect(() => {
-		prefetchPersonData();
-		prefetchProductData();
-	}, []);
+	// useEffect(() => {
+	// 	prefetchPersonData();
+	// 	prefetchProductData();
+	// }, []);
 
 	return (
 		<div>

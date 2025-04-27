@@ -1,0 +1,1 @@
+export {PersonTable} from "./PersonTable";
