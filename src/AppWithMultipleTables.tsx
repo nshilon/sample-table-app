@@ -59,7 +59,7 @@ function AppWithMultipleTables() {
 
             {activeTable === 'persons' ? (
                 <div>
-                    <h2>Persons Table</h2>
+
                     <PersonTable
                         features={{
                             enableSorting: true,
@@ -73,7 +73,6 @@ function AppWithMultipleTables() {
                 </div>
             ) : (
                 <div>
-                    <h2>Products Table</h2>
                     <ProductTable
                         features={{
                             enableSorting: true,
