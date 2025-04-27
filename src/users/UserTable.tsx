@@ -1,6 +1,6 @@
 import {
 	DataTable,
-	type ExtendedColumnDef, type TableOptions
+	type TableColumnDef, type TableOptions
 } from "@/components/data-table";
 import { debounce } from "../lib/utils";
 
@@ -18,7 +18,7 @@ import type {User, UserResponse} from "./types.ts";
 // };
 
 // Define columns for Person data
-export const personColumns: ExtendedColumnDef<
+export const personColumns: TableColumnDef<
 	User,
 	{ filterComponent: any }
 >[] = [

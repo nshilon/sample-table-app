@@ -45,7 +45,7 @@ type ColumnMeta<TData> = {
 };
 
 // Extend ColumnDef to include the custom meta type
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     meta?: ColumnMeta<TData>;
 };
 
@@ -62,7 +62,7 @@ export function DataTable<TData, TResponse>({
                                                 },
                                                 children,
                                             }: {
-    columns: ExtendedColumnDef<TData, { filterComponent: any }>[];
+    columns: TableColumnDef<TData, { filterComponent: any }>[];
     options?: TableOptions;
     dataProvider: DataProvider<TData, TResponse>;
     features?: DataTableFeatures;
@@ -302,7 +302,7 @@ export function DataTable<TData, TResponse>({
                                         {table.options.manualFiltering &&
                                             header.column.getCanFilter() &&
                                             (
-                                                header.column.columnDef as ExtendedColumnDef<
+                                                header.column.columnDef as TableColumnDef<
                                                     TData,
                                                     any
                                                 >

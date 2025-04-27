@@ -44,7 +44,7 @@ The DataTable component architecture consists of several key parts:
 3. **BaseDataProvider**: Abstract class that provides a base implementation of the DataProvider interface
 4. **DataCache**: Generic class for efficient data fetching and caching
 5. **DataTablePagination**: Component for rendering pagination controls
-6. **ExtendedColumnDef**: Extended column definition type with support for custom filter components
+6. **TableColumnDef**: Extended column definition type with support for custom filter components
 
 ### Component Interaction Flow
 
@@ -77,7 +77,7 @@ The DataTable component architecture consists of several key parts:
 
 | Prop | Type | Description | Required | Default |
 |------|------|-------------|----------|---------|
-| `columns` | `ExtendedColumnDef<TData, any>[]` | Column definitions for the table | Yes | - |
+| `columns` | `TableColumnDef<TData, any>[]` | Column definitions for the table | Yes | - |
 | `options` | `TableOptions` | Table options including sorting, pagination, filters | No | `{}` |
 | `dataProvider` | `DataProvider<TData, TResponse>` | Implementation of the DataProvider interface | Yes | - |
 | `features` | `DataTableFeatures` | Feature flags to enable/disable table features | No | See below |
@@ -305,12 +305,12 @@ getCacheKey(options: FetchOptions): string {
 
 ## Column Configuration
 
-Columns are defined using the `ExtendedColumnDef` type, which extends the `ColumnDef` type from `@tanstack/react-table` with additional meta properties.
+Columns are defined using the `TableColumnDef` type, which extends the `ColumnDef` type from `@tanstack/react-table` with additional meta properties.
 
-### ExtendedColumnDef Type
+### TableColumnDef Type
 
 ```tsx
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     meta?: ColumnMeta<TData>;
 };
 
@@ -322,7 +322,7 @@ type ColumnMeta<TData> = {
 ### Example Column Definition
 
 ```tsx
-const productColumns: ExtendedColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product, any>[] = [
     {
         accessorKey: "name",
         header: "Product Name",
@@ -621,7 +621,7 @@ export function ProductTable() {
 ### Creating a Reusable Table Component
 
 ```tsx
-import { DataTable, type ExtendedColumnDef, type TableOptions } from "@/components/data-table";
+import { DataTable, type TableColumnDef, type TableOptions } from "@/components/data-table";
 import { useMemo } from "react";
 import { ProductDataProvider } from "./ProductDataProvider";
 import { productColumns } from "./productColumns";
@@ -874,7 +874,7 @@ export interface ProductResponse {
 }
 
 // Define your column types
-const productColumns: ExtendedColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product, any>[] = [
     // ...
 ];
 
@@ -952,7 +952,7 @@ export class ProductDataProvider extends BaseDataProvider<Product, ProductRespon
 
 1. **Update DataProvider Interface**: Implement the new `prefetchAdjacentPages` method.
 
-2. **Update Column Definitions**: Use the new `ExtendedColumnDef` type instead of the old `ColumnDef` type.
+2. **Update Column Definitions**: Use the new `TableColumnDef` type instead of the old `ColumnDef` type.
 
 3. **Update Feature Flags**: Use the new `DataTableFeatures` type instead of the old feature flags.
 

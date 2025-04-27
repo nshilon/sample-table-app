@@ -1,6 +1,6 @@
 import {
 	DataTable,
-	type ExtendedColumnDef, type TableOptions
+	type TableColumnDef, type TableOptions
 } from "@/components/data-table";
 import { debounce } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ import type {Product, ProductResponse} from "./types.ts";
 
 
 // Define columns for Product data
-export const productColumns: ExtendedColumnDef<
+export const productColumns: TableColumnDef<
 	Product,
 	{ filterComponent: any }
 >[] = [

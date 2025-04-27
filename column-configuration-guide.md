@@ -19,14 +19,14 @@ This guide provides a detailed explanation of column configuration for the DataT
 
 ## Introduction
 
-The DataTable component uses the `ExtendedColumnDef` type to define columns, which extends the `ColumnDef` type from `@tanstack/react-table` with additional meta properties for custom filtering and other features.
+The DataTable component uses the `TableColumnDef` type to define columns, which extends the `ColumnDef` type from `@tanstack/react-table` with additional meta properties for custom filtering and other features.
 
 ## Basic Column Configuration
 
 A basic column definition includes the following properties:
 
 ```tsx
-const columns: ExtendedColumnDef<Product, any>[] = [
+const columns: TableColumnDef<Product, any>[] = [
     {
         accessorKey: "name",
         header: "Product Name",
@@ -47,10 +47,10 @@ const columns: ExtendedColumnDef<Product, any>[] = [
 
 ## Column Types and Properties
 
-### ExtendedColumnDef Type
+### TableColumnDef Type
 
 ```tsx
-export type ExtendedColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
+export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
     meta?: ColumnMeta<TData>;
 };
 
@@ -482,7 +482,7 @@ meta: {
 1. **Use Proper Types**: Always use proper types for your column definitions.
 
 ```tsx
-const columns: ExtendedColumnDef<Product, any>[] = [
+const columns: TableColumnDef<Product, any>[] = [
     // Column definitions
 ];
 ```
@@ -502,7 +502,7 @@ cell: (info) => {
 
 ```tsx
 // productColumns.ts
-export const productColumns: ExtendedColumnDef<Product, any>[] = [
+export const productColumns: TableColumnDef<Product, any>[] = [
     // Column definitions
 ];
 
@@ -537,7 +537,7 @@ meta: {
 ### Basic Column Definition
 
 ```tsx
-const productColumns: ExtendedColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product, any>[] = [
     {
         accessorKey: "name",
         header: "Product Name",
@@ -648,7 +648,7 @@ import { NumberFilter } from "./filters/NumberFilter";
 import { StatusBadge } from "./components/StatusBadge";
 import { ActionButtons } from "./components/ActionButtons";
 
-const productColumns: ExtendedColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product, any>[] = [
     {
         accessorKey: "name",
         header: "Product Name",
@@ -723,7 +723,7 @@ const productColumns: ExtendedColumnDef<Product, any>[] = [
 ### Column Definition with Nested Data
 
 ```tsx
-const orderColumns: ExtendedColumnDef<Order, any>[] = [
+const orderColumns: TableColumnDef<Order, any>[] = [
     {
         accessorKey: "id",
         header: "Order ID",
