@@ -1,6 +1,6 @@
 import {
 	DataTable,
-	type ExtendedColumnDef, TableOptions,
+	type ExtendedColumnDef, type TableOptions,
 	type TableSortingState,
 } from "@/components/data-table";
 import { debounce } from "../lib/utils";

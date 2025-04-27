@@ -21,7 +21,7 @@ import {
 
 import Button from "@/components/button";
 import {deepMerge} from "@/lib/utils.tsx";
-import {DataProvider} from "./dataProvider.ts";
+import type {DataProvider} from "./dataProvider.ts";
 
 // Generic type for table options
 export type TableOptions = {
