@@ -37,7 +37,6 @@ export type DataTableFeatures = {
     enablePagination?: boolean;
     enableGlobalFilter?: boolean;
     enableColumnFilters?: boolean;
-    initialPageSize?: number;
 };
 
 // Define a custom ColumnMeta type
@@ -59,8 +58,7 @@ export function DataTable<TData, TResponse>({
                                                     enableSorting: true,
                                                     enablePagination: true,
                                                     enableGlobalFilter: true,
-                                                    enableColumnFilters: true,
-                                                    initialPageSize: 10
+                                                    enableColumnFilters: true
                                                 },
                                                 children,
                                             }: {
@@ -82,7 +80,7 @@ export function DataTable<TData, TResponse>({
     const [pagination, setPagination] = useState<TableOptions['pagination']>(
         options?.pagination || {
             pageIndex: 0,
-            pageSize: features.initialPageSize || 10,
+            pageSize: 10,
         },
     );
     const [sorting, setSorting] = useState<TableOptions["sorting"]>(

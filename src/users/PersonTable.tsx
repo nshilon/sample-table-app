@@ -10,7 +10,6 @@ import { PersonDataProvider } from "./PersonDataProvider";
 import type {Person, PersonResponse} from "./types.ts";
 
 
-const baseApiUrl = import.meta.env.VITE_API_URL;
 
 // // Function to prefetch initial data
 // export const prefetchInitialData = () => {
@@ -124,13 +123,12 @@ export const PersonTable = ({
 		enablePagination?: boolean;
 		enableGlobalFilter?: boolean;
 		enableColumnFilters?: boolean;
-		initialPageSize?: number;
 	};
 	children?: React.ReactNode;
 }) => {
 	// Create the data provider
 	const dataProvider = useMemo(() => {
-		return new PersonDataProvider(baseApiUrl);
+		return new PersonDataProvider();
 	}, []);
 
 	return (

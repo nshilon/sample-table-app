@@ -11,7 +11,6 @@ import type {Product, ProductResponse} from "./types.ts";
 
 
 
-const baseApiUrl = import.meta.env.VITE_API_URL;
 
 // Define columns for Product data
 export const productColumns: ExtendedColumnDef<
@@ -118,13 +117,12 @@ export const ProductTable = ({
 		enablePagination?: boolean;
 		enableGlobalFilter?: boolean;
 		enableColumnFilters?: boolean;
-		initialPageSize?: number;
 	};
 	children?: React.ReactNode;
 }) => {
 	// Create the data provider
 	const dataProvider = useMemo(() => {
-		return new ProductDataProvider(baseApiUrl);
+		return new ProductDataProvider();
 	}, []);
 
 	return (
