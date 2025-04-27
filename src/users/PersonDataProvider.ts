@@ -1,7 +1,7 @@
 import { BaseDataProvider } from "../lib/baseDataProvider";
 
 import { createDataCache } from "../lib/dataCache";
-import {Person, PersonResponse} from "./types.ts";
+import type {Person, PersonResponse} from "./types.ts";
 
 // Initial empty response for persons
 export const initialPersonResponse: PersonResponse = {

@@ -8,7 +8,7 @@ import type { FetchOptions } from "../lib/dataCache";
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
 import { PersonDataProvider } from "./PersonDataProvider";
-import {Person, PersonResponse} from "./types.ts";
+import type {Person, PersonResponse} from "./types.ts";
 
 
 
