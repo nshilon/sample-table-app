@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import {useDeferredValue, useEffect, useRef, useState, useTransition} from "react";
 import {deepMerge} from "./lib/utils.tsx";
+import { DataProvider } from "./lib/dataProvider";
 
 // Generic type for table options
 export type TableOptions = {
@@ -32,11 +33,7 @@ export type DataTableFeatures = {
 export function DataTable<TData, TResponse>({
                                                 columns,
                                                 options,
-                                                initialData,
-                                                getRowData,
-                                                getRowCount,
-                                                getPageCount,
-                                                fetchDataFn,
+                                                dataProvider,
                                                 features = {
                                                     enableSorting: true,
                                                     enablePagination: true,
@@ -48,18 +45,14 @@ export function DataTable<TData, TResponse>({
                                             }: {
     columns: ColumnDef<TData, { filterComponent: any }>[];
     options?: TableOptions;
-    initialData: TResponse;
-    getRowData: (response: TResponse) => TData[];
-    getRowCount: (response: TResponse) => number;
-    getPageCount: (response: TResponse) => number;
-    fetchDataFn: (options: TableOptions) => Promise<TResponse>;
+    dataProvider: DataProvider<TData, TResponse>;
     features?: DataTableFeatures;
 }) {
     // Use transition to avoid showing the Suspense fallback during transitions
     const [isPending, startTransition] = useTransition();
 
     // Keep track of the latest data
-    const [currentData, setCurrentData] = useState<TResponse>(initialData);
+    const [currentData, setCurrentData] = useState<TResponse>(dataProvider.getInitialData());
 
     // Internal state management for table features
     const [pagination, setPagination] = useState<PaginationState>(options?.pagination || {
@@ -87,7 +80,7 @@ export function DataTable<TData, TResponse>({
 
     // Function to get current data based on internal state
     const getCurrentData = () => {
-        return fetchDataFn(options || internalOptions);
+        return dataProvider.fetchData(options || internalOptions);
     };
 
     // Handle internal state changes
@@ -135,15 +128,15 @@ export function DataTable<TData, TResponse>({
         return () => {
             isMounted = false;
         };
-    }, [options, pagination, sorting, globalFilter, columnFilters, fetchDataFn]);
+    }, [options, pagination, sorting, globalFilter, columnFilters, dataProvider]);
 
     // Apply deferred value to the current data to avoid flickering
     const deferredData = useDeferredValue(currentData);
 
-    // Extract data from the response using the provided accessor functions
-    const data = getRowData(deferredData);
-    const rowCount = getRowCount(deferredData);
-    const pageCount = getPageCount(deferredData);
+    // Extract data from the response using the dataProvider
+    const data = dataProvider.getRowData(deferredData);
+    const rowCount = dataProvider.getRowCount(deferredData);
+    const pageCount = dataProvider.getPageCount(deferredData);
 
     // Create the table instance using useReactTable
     const baseTableOptions = {

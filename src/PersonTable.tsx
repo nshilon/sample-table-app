@@ -1,8 +1,9 @@
-import {ColumnDef, ColumnFiltersState, OnChangeFn, PaginationState, SortingState} from "@tanstack/react-table";
+import {ColumnDef, SortingState} from "@tanstack/react-table";
 import { DataTable } from "./DataTable";
 import { debounce } from "./lib/utils";
-import { createDataCache, FetchOptions } from "./lib/dataCache";
-import {ChangeEvent, useEffect} from "react";
+import { FetchOptions } from "./lib/dataCache";
+import React, {ChangeEvent, useEffect, useMemo} from "react";
+import { PersonDataProvider } from "./providers/PersonDataProvider";
 
 // Person type definition
 export type Person = {
@@ -30,24 +31,10 @@ export type Options = FetchOptions;
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 
-// Create a person-specific data cache
-const personCache = createDataCache<PersonResponse>(baseApiUrl, 'users', 'first_name');
-
-// Function to fetch users using the generic cache
-export const fetchUsers = async (options: Options): Promise<PersonResponse> => {
-    return personCache.fetchData(options);
-};
-
-// Function to prefetch adjacent pages
-export const prefetchAdjacentPages = (currentOptions: Options) => {
-    personCache.prefetchAdjacentPages(currentOptions);
-};
-
 // Function to prefetch initial data
 export const prefetchInitialData = () => {
-    return personCache.prefetchInitialData({
-        sorting: [{ id: 'first_name', desc: false }]
-    });
+    const provider = new PersonDataProvider(baseApiUrl);
+    return provider.prefetchInitialData();
 };
 
 // Define columns for Person data
@@ -121,16 +108,7 @@ export const personColumns: ColumnDef<Person, { filterComponent: any }>[] = [
     }
 ];
 
-// Initial empty response
-export const initialPersonResponse: PersonResponse = {
-    data: [],
-    pages: 0,
-    items: 0,
-    first: 0,
-    prev: 0,
-    next: 0,
-    last: 0
-};
+
 
 // PersonTable component that uses the generic DataTable
 export const PersonTable = ({
@@ -149,27 +127,28 @@ export const PersonTable = ({
     },
     children?: React.ReactNode
 }) => {
+    // Create the data provider
+    const dataProvider = useMemo(() => {
+        return new PersonDataProvider(baseApiUrl);
+    }, []);
+
     // Effect to prefetch adjacent pages when the current page changes
     useEffect(() => {
         if (options?.pagination) {
             // Use a small timeout to not interfere with the current fetch
             const timeoutId = setTimeout(() => {
-                prefetchAdjacentPages(options);
+                dataProvider.prefetchAdjacentPages(options);
             }, 100);
 
             return () => clearTimeout(timeoutId);
         }
-    }, [options?.pagination?.pageIndex]);
+    }, [options?.pagination?.pageIndex, dataProvider]);
 
     return (
         <DataTable<Person, PersonResponse>
             columns={personColumns}
             options={options}
-            initialData={initialPersonResponse}
-            getRowData={(response) => response.data}
-            getRowCount={(response) => response.items}
-            getPageCount={(response) => response.pages}
-            fetchDataFn={fetchUsers}
+            dataProvider={dataProvider}
             features={features}
         >
             {children}

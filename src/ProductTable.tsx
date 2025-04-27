@@ -1,8 +1,9 @@
 import {ColumnDef, SortingState} from "@tanstack/react-table";
 import { DataTable } from "./DataTable";
 import { debounce } from "./lib/utils";
-import { createDataCache, FetchOptions } from "./lib/dataCache";
-import React, {ChangeEvent, useEffect} from "react";
+import { FetchOptions } from "./lib/dataCache";
+import React, {ChangeEvent, useEffect, useMemo} from "react";
+import { ProductDataProvider } from "./providers/ProductDataProvider";
 
 // Product type definition
 export type Product = {
@@ -30,35 +31,10 @@ export type Options = FetchOptions;
 
 const baseApiUrl = import.meta.env.VITE_API_URL;
 
-// Create a product-specific data cache
-const productCache = createDataCache<ProductResponse>(baseApiUrl, 'products', 'name');
-
-// Function to fetch products using the generic cache
-export const fetchProducts = async (options: Options): Promise<ProductResponse> => {
-    return productCache.fetchData(options);
-};
-
-// Function to prefetch adjacent pages
-export const prefetchAdjacentPages = (currentOptions: Options) => {
-    productCache.prefetchAdjacentPages(currentOptions);
-};
-
 // Function to prefetch initial data
 export const prefetchInitialData = () => {
-    return productCache.prefetchInitialData({
-        sorting: [{ id: 'name', desc: false }]
-    });
-};
-
-// Initial empty response
-export const initialProductResponse: ProductResponse = {
-    data: [],
-    pages: 0,
-    items: 0,
-    first: 0,
-    prev: 0,
-    next: 0,
-    last: 0
+    const provider = new ProductDataProvider(baseApiUrl);
+    return provider.prefetchInitialData();
 };
 
 // Define columns for Product data
@@ -152,27 +128,28 @@ export const ProductTable = ({
     },
     children?: React.ReactNode
 }) => {
+    // Create the data provider
+    const dataProvider = useMemo(() => {
+        return new ProductDataProvider(baseApiUrl);
+    }, []);
+
     // Effect to prefetch adjacent pages when the current page changes
     useEffect(() => {
         if (options?.pagination) {
             // Use a small timeout to not interfere with the current fetch
             const timeoutId = setTimeout(() => {
-                prefetchAdjacentPages(options);
+                dataProvider.prefetchAdjacentPages(options);
             }, 100);
 
             return () => clearTimeout(timeoutId);
         }
-    }, [options?.pagination?.pageIndex]);
+    }, [options?.pagination?.pageIndex, dataProvider]);
 
     return (
         <DataTable<Product, ProductResponse>
             columns={productColumns}
             options={options}
-            initialData={initialProductResponse}
-            getRowData={(response) => response.data}
-            getRowCount={(response) => response.items}
-            getPageCount={(response) => response.pages}
-            fetchDataFn={fetchProducts}
+            dataProvider={dataProvider}
             features={features}
         >
             {children}
