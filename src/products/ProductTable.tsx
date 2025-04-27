@@ -2,33 +2,15 @@ import {
 	DataTable,
 	type ExtendedColumnDef,
 	type TableSortingState,
-} from "./DataTable";
-import { debounce } from "./lib/utils";
-import type { FetchOptions } from "./lib/dataCache";
+} from "../DataTable";
+import { debounce } from "../lib/utils";
+import type { FetchOptions } from "../lib/dataCache";
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
-import { ProductDataProvider } from "./providers/ProductDataProvider";
+import { ProductDataProvider } from "./ProductDataProvider";
+import type {Product, ProductResponse} from "./types.ts";
 
-// Product type definition
-export type Product = {
-	id: number;
-	name: string;
-	category: string;
-	price: number;
-	stock: number;
-	description: string;
-};
 
-// Response type for Product data
-export type ProductResponse = {
-	first: number;
-	prev: number;
-	next: number;
-	last: number;
-	pages: number;
-	items: number;
-	data: Product[];
-};
 
 // Use FetchOptions from dataCache
 export type Options = FetchOptions;

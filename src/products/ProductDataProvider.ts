@@ -1,6 +1,7 @@
 import { BaseDataProvider } from "../lib/baseDataProvider";
-import type { Product, ProductResponse } from "../ProductTable";
+
 import { createDataCache } from "../lib/dataCache";
+import type {Product, ProductResponse} from "./types.ts";
 
 // Initial empty response for products
 export const initialProductResponse: ProductResponse = {
