@@ -6,7 +6,7 @@ import {
 import { debounce } from "./lib/utils";
 import type { FetchOptions } from "./lib/dataCache";
 import type React from "react";
-import { type ChangeEvent, useEffect, useMemo } from "react";
+import { type ChangeEvent, useMemo } from "react";
 import { PersonDataProvider } from "./providers/PersonDataProvider";
 
 // Person type definition
@@ -156,18 +156,6 @@ export const PersonTable = ({
 	const dataProvider = useMemo(() => {
 		return new PersonDataProvider(baseApiUrl);
 	}, []);
-
-	// Effect to prefetch adjacent pages when the current page changes
-	useEffect(() => {
-		if (options?.pagination) {
-			// Use a small timeout to not interfere with the current fetch
-			const timeoutId = setTimeout(() => {
-				dataProvider.prefetchAdjacentPages(options);
-			}, 100);
-
-			return () => clearTimeout(timeoutId);
-		}
-	}, [options?.pagination?.pageIndex, dataProvider]);
 
 	return (
 		<DataTable<Person, PersonResponse>
