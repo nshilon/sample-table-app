@@ -120,6 +120,8 @@ export type DataTableFeatures = {
 
 The DataProvider pattern follows the Inversion of Control (IoC) principle, where the DataTable component delegates data operations to a DataProvider implementation.
 
+see also, [data-provider-pattern-guide.md](data-provider-pattern-guide.md)
+
 ### DataProvider Interface
 
 ```tsx
@@ -364,6 +366,8 @@ const productColumns: ExtendedColumnDef<Product, any>[] = [
 | `enableSorting` | `boolean` | Whether the column is sortable |
 | `cell` | `(info: CellContext<TData, TValue>) => React.ReactNode` | Function to render the cell content |
 | `meta` | `ColumnMeta<TData>` | Additional metadata for the column |
+
+see also, [column-configuration-guide.md](column-configuration-guide.md)
 
 ## Filtering Capabilities
 
