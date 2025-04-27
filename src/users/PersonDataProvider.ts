@@ -12,6 +12,8 @@ export const initialPersonResponse: PersonResponse = {
 	data: [],
 };
 
+const BASE_API_URL = import.meta.env.VITE_API_URL;
+
 /**
  * Person-specific implementation of DataProvider
  */
@@ -24,7 +26,7 @@ export class PersonDataProvider extends BaseDataProvider<
 	 *
 	 * @param baseApiUrl Base API URL
 	 */
-	constructor(baseApiUrl: string) {
+	constructor(baseApiUrl: string = BASE_API_URL) {
 		// Create a person-specific data cache
 		const personCache = createDataCache<PersonResponse>(
 			baseApiUrl,
