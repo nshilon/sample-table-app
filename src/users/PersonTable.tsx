@@ -1,7 +1,6 @@
 import {
 	DataTable,
-	type ExtendedColumnDef, type TableOptions,
-	type TableSortingState,
+	type ExtendedColumnDef, type TableOptions
 } from "@/components/data-table";
 import { debounce } from "../lib/utils";
 
@@ -126,7 +125,6 @@ export const PersonTable = ({
 		enableGlobalFilter?: boolean;
 		enableColumnFilters?: boolean;
 		initialPageSize?: number;
-		initialSorting?: TableSortingState;
 	};
 	children?: React.ReactNode;
 }) => {
