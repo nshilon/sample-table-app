@@ -1,5 +1,5 @@
        // Person type definition
-export type Person = {
+export type User = {
 	id: number;
 	first_name: string;
 	last_name: string;
@@ -9,12 +9,12 @@ export type Person = {
 };
 
 // Response type for Person data
-export type PersonResponse = {
+export type UserResponse = {
 	first: number;
 	prev: number;
 	next: number;
 	last: number;
 	pages: number;
 	items: number;
-	data: Person[];
+	data: User[];
 };

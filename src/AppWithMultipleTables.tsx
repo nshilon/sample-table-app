@@ -2,12 +2,13 @@ import "./App.css";
 
 import {useState} from "react";
 import type {TableOptions} from "@/components/data-table";
-import {PersonTable} from "./users";
+import {UserTable} from "./users";
 import {ProductTable} from "./products";
+import Button from "@/components/button.tsx";
 
 function AppWithMultipleTables() {
     // Define initial sorting states
-    const initialPersonSorting: TableOptions['sorting'] = [
+    const initialUsersSorting: TableOptions['sorting'] = [
         {
             id: "first_name",
             desc: false,
@@ -26,8 +27,8 @@ function AppWithMultipleTables() {
     ];
 
     // State to track which table is active
-    const [activeTable, setActiveTable] = useState<"persons" | "products">(
-        "persons",
+    const [activeTable, setActiveTable] = useState<"users" | "products">(
+        "users",
     );
 
     // Prefetch initial data when component mounts
@@ -39,21 +40,21 @@ function AppWithMultipleTables() {
     return (
         <div>
             <div style={{marginBottom: "20px"}}>
-                <button
-                    onClick={() => setActiveTable("persons")}
+                <Button
+                    onClick={() => setActiveTable("users")}
                     style={{
                         padding: "8px 16px",
                         marginRight: "10px",
-                        backgroundColor: activeTable === "persons" ? "#4a90e2" : "#f0f0f0",
-                        color: activeTable === "persons" ? "white" : "black",
+                        backgroundColor: activeTable === "users" ? "#4a90e2" : "#f0f0f0",
+                        color: activeTable === "users" ? "white" : "black",
                         border: "none",
                         borderRadius: "4px",
                         cursor: "pointer",
                     }}
                 >
                     Show Users
-                </button>
-                <button
+                </Button>
+                <Button
                     onClick={() => setActiveTable("products")}
                     style={{
                         padding: "8px 16px",
@@ -65,13 +66,13 @@ function AppWithMultipleTables() {
                     }}
                 >
                     Show Products
-                </button>
+                </Button>
             </div>
 
-            {activeTable === "persons" ? (
+            {activeTable === "users" ? (
                 <div>
-                    <PersonTable
-                        options={{sorting: initialPersonSorting}}
+                    <UserTable
+                        options={{sorting: initialUsersSorting}}
                         features={{
                             enableSorting: true,
                             enablePagination: true,

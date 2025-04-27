@@ -1,1 +1,1 @@
-export {PersonTable} from "./PersonTable";
+export {UserTable} from "./UserTable.tsx";

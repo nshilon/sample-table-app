@@ -6,8 +6,8 @@ import { debounce } from "../lib/utils";
 
 import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
-import { PersonDataProvider } from "./PersonDataProvider";
-import type {Person, PersonResponse} from "./types.ts";
+import { UserDataProvider } from "./UserDataProvider.ts";
+import type {User, UserResponse} from "./types.ts";
 
 
 
@@ -19,7 +19,7 @@ import type {Person, PersonResponse} from "./types.ts";
 
 // Define columns for Person data
 export const personColumns: ExtendedColumnDef<
-	Person,
+	User,
 	{ filterComponent: any }
 >[] = [
 	{
@@ -112,7 +112,7 @@ export const personColumns: ExtendedColumnDef<
 ];
 
 // PersonTable component that uses the generic DataTable
-export const PersonTable = ({
+export const UserTable = ({
 	options,
 	features,
 	children,
@@ -128,11 +128,11 @@ export const PersonTable = ({
 }) => {
 	// Create the data provider
 	const dataProvider = useMemo(() => {
-		return new PersonDataProvider();
+		return new UserDataProvider();
 	}, []);
 
 	return (
-		<DataTable<Person, PersonResponse>
+		<DataTable<User, UserResponse>
 			columns={personColumns}
 			options={options}
 			dataProvider={dataProvider}
