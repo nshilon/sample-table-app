@@ -249,6 +249,7 @@ export function DataTable<TData, TResponse>({
                             {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
                             <DataTable.Header/>
                             <DataTable.Body/>
+                            <DataTable.Footer/>
                             {table.options.manualPagination && <DataTablePagination/>}
                         </>
 
@@ -346,6 +347,26 @@ DataTable.Body = function () {
     </div>);
 }
 
+DataTable.Footer = function () {
+    const {table} = useDataTable();
+    return (<div className="tfoot">{
+        table.getFooterGroups().map((footerGroup) => (
+            <div key={footerGroup.id} className='tr'>
+                {footerGroup.headers.map((header) => (
+                    <div key={header.id} className="th">
+                        {header.isPlaceholder ? null : (
+                            flexRender(
+                                header.column.columnDef.footer,
+                                header.getContext(),
+                            )
+
+                        )}
+                    </div>
+                ))}
+            </div>
+        ))}
+    </div>);
+}
 
 DataTable.GlobalFilter = DataTableGlobalFilter;
 
