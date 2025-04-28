@@ -1,6 +1,7 @@
 import type {User, UserResponse} from "./types.ts";
-import {createDataCache} from "@/components/data-table/provider";
+import {createDataCache, type FetchOptions} from "@/components/data-table/provider";
 import {JsonServerBaseDataProvider} from "@/components/data-table/provider/jsonServerBaseDataProvider.ts";
+import type {TableOptions} from "@/components/data-table";
 
 // Initial empty response for persons
 export const initialResponse: UserResponse = {
@@ -35,6 +36,13 @@ export class UserDataProvider extends JsonServerBaseDataProvider<
 		);
 		super(personCache, initialResponse);
 	}
+
+	fetchData(options: TableOptions): Promise<UserResponse> {
+		this.prefetchAdjacentPages(options as FetchOptions);
+		return this.dataCache.fetchData(options as FetchOptions);
+	}
+
+
 
 	// /**
 	//  * Prefetches initial data with default sorting
