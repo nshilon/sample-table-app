@@ -5,7 +5,7 @@ export function DataTablePagination<TData>() {
 
     const {table} = useDataTable<TData>();
 
-    return (<>
+    return (<div className="hbox">
             <Button
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
@@ -35,6 +35,6 @@ export function DataTablePagination<TData>() {
             >
                 {">>"}
             </Button>
-        </>
+        </div>
     )
 }
