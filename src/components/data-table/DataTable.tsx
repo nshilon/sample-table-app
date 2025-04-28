@@ -82,7 +82,7 @@ export function DataTable<TData, TResponse>({
 
     const tableRef = useRef<HTMLDivElement>(null)
 
-    const size = useResize( tableRef );
+    const size = useResize(tableRef);
 
     // Keep track of the latest data
     const [currentData, setCurrentData] = useState<TResponse>(
@@ -248,7 +248,7 @@ export function DataTable<TData, TResponse>({
                         <>
                             {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
                             <DataTable.Header/>
-                            <DataTable.Body />
+                            <DataTable.Body/>
                             {table.options.manualPagination && <DataTablePagination/>}
                         </>
 
@@ -263,64 +263,64 @@ DataTable.Header = function <TData>() {
     return (<div className="thead">{
         table.getHeaderGroups().map((headerGroup) => (
             <div key={headerGroup.id} className='tr'>
-            {headerGroup.headers.map((header) => (
-                <div key={header.id} className="th" >
-                    {header.isPlaceholder ? null : (
-                        <div
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: ".2rem",
-                                ...(header.column.getCanSort()
-                                    ? {cursor: "pointer"}
-                                    : {}),
-                            }}
-                        >
-                            <Button
-                                onClick={header.column.getToggleSortingHandler()}
+                {headerGroup.headers.map((header) => (
+                    <div key={header.id} className="th">
+                        {header.isPlaceholder ? null : (
+                            <div
                                 style={{
-                                    height: "1rem",
-                                    lineHeight: "1rem",
-                                    padding: "0 .25rem",
-                                    outline: "none",
-                                    border: "none",
-                                    background: "none",
-                                    cursor: "pointer",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: ".2rem",
+                                    ...(header.column.getCanSort()
+                                        ? {cursor: "pointer"}
+                                        : {}),
                                 }}
                             >
-                                {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                )}
-                                {header.column.getCanSort()
-                                    ? header.column.getIsSorted()
-                                        ? header.column.getIsSorted() === "desc"
-                                            ? "🔻"
-                                            : "🔺"
-                                        : ""
-                                    : null}
-                                {header.column.getCanSort() &&
-                                header.column.getIsSorted() &&
-                                table.getState().sorting.length > 1 ? (
-                                    <sup style={{fontSize: ".5rem"}}>
-                                        {header.column.getSortIndex() + 1}
-                                    </sup>
-                                ) : null}
-                            </Button>
+                                <Button
+                                    onClick={header.column.getToggleSortingHandler()}
+                                    style={{
+                                        height: "1rem",
+                                        lineHeight: "1rem",
+                                        padding: "0 .25rem",
+                                        outline: "none",
+                                        border: "none",
+                                        background: "none",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    {flexRender(
+                                        header.column.columnDef.header,
+                                        header.getContext(),
+                                    )}
+                                    {header.column.getCanSort()
+                                        ? header.column.getIsSorted()
+                                            ? header.column.getIsSorted() === "desc"
+                                                ? "🔻"
+                                                : "🔺"
+                                            : ""
+                                        : null}
+                                    {header.column.getCanSort() &&
+                                    header.column.getIsSorted() &&
+                                    table.getState().sorting.length > 1 ? (
+                                        <sup style={{fontSize: ".5rem"}}>
+                                            {header.column.getSortIndex() + 1}
+                                        </sup>
+                                    ) : null}
+                                </Button>
 
-                            {/* Render custom filter component if provided */}
-                            {table.options.manualFiltering &&
-                                header.column.getCanFilter() &&
-                                (
-                                    header.column.columnDef as TableColumnDef<
-                                        TData
-                                    >
-                                ).meta?.filterComponent?.(header.column as Column<TData, any>)}
-                        </div>
-                    )}
-                </div>
-            ))}
-        </div>
+                                {/* Render custom filter component if provided */}
+                                {table.options.manualFiltering &&
+                                    header.column.getCanFilter() &&
+                                    (
+                                        header.column.columnDef as TableColumnDef<
+                                            TData
+                                        >
+                                    ).meta?.filterComponent?.(header.column as Column<TData, any>)}
+                            </div>
+                        )}
+                    </div>
+                ))}
+            </div>
         ))}
     </div>);
 }
@@ -332,7 +332,12 @@ DataTable.Body = function () {
         {table.getRowModel().rows.map((row) => (
             <div key={row.id} className="tr">
                 {row.getVisibleCells().map((cell) => (
-                    <div key={cell.id} className="td" style={{width: cell.column.getSize(),minWidth: cell.column.getSize(), maxWidth: cell.column.getSize(), overflow: "hidden"}}>
+                    <div key={cell.id} className="td" style={{
+                        width: cell.column.getSize(),
+                        minWidth: cell.column.getSize(),
+                        maxWidth: cell.column.getSize(),
+                        overflow: "hidden"
+                    }}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </div>
                 ))}
