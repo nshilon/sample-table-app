@@ -40,10 +40,10 @@ The DataTable component is designed to provide a generic, reusable solution for 
 The DataTable component architecture consists of several key parts:
 
 1. **DataTable Component**: The main component that renders the table and manages state
-2. **DataProvider Interface**: Defines the contract for data operations
-3. **BaseDataProvider**: Abstract class that provides a base implementation of the DataProvider interface
-4. **DataCache**: Generic class for efficient data fetching and caching
-5. **DataTablePagination**: Component for rendering pagination controls
+2. **DataTable Parts**: Subcomponents for rendering different parts of the table (Header, Body, Footer, GlobalFilter, Pagination)
+3. **DataProvider Interface**: Defines the contract for data operations
+4. **BaseDataProvider**: Abstract class that provides a base implementation of the DataProvider interface
+5. **DataCache**: Generic class for efficient data fetching and caching
 6. **TableColumnDef**: Extended column definition type with support for custom filter components
 
 ### Component Interaction Flow
@@ -68,6 +68,30 @@ The DataTable component architecture consists of several key parts:
 />
 ```
 
+### DataTable Parts
+
+The DataTable component provides several parts that can be used to customize the table layout:
+
+```tsx
+// Default usage with all parts
+<DataTable<TData, TResponse>
+    columns={columns}
+    dataProvider={dataProvider}
+/>
+
+// Custom layout using parts
+<DataTable<TData, TResponse>
+    columns={columns}
+    dataProvider={dataProvider}
+>
+    <DataTable.GlobalFilter />
+    <DataTable.Header />
+    <DataTable.Body />
+    <DataTable.Footer />
+    <DataTable.Pagination />
+</DataTable>
+```
+
 ### Generic Type Parameters
 
 - `TData`: The type of data items displayed in the table
@@ -77,7 +101,7 @@ The DataTable component architecture consists of several key parts:
 
 | Prop | Type | Description | Required | Default |
 |------|------|-------------|----------|---------|
-| `columns` | `TableColumnDef<TData, any>[]` | Column definitions for the table | Yes | - |
+| `columns` | `TableColumnDef<TData>[]` | Column definitions for the table | Yes | - |
 | `options` | `TableOptions` | Table options including sorting, pagination, filters | No | `{}` |
 | `dataProvider` | `DataProvider<TData, TResponse>` | Implementation of the DataProvider interface | Yes | - |
 | `features` | `DataTableFeatures` | Feature flags to enable/disable table features | No | See below |
@@ -166,24 +190,24 @@ The BaseDataProvider abstract class provides a base implementation of the DataPr
 export abstract class BaseDataProvider<TData, TResponse> implements DataProvider<TData, TResponse> {
     protected dataCache: DataCache<TResponse>;
     protected initialData: TResponse;
-    
+
     constructor(dataCache: DataCache<TResponse>, initialData: TResponse) {
         this.dataCache = dataCache;
         this.initialData = initialData;
     }
-    
+
     fetchData(options: TableOptions): Promise<TResponse> {
         return this.dataCache.fetchData(options as FetchOptions);
     }
-    
+
     getInitialData(): TResponse {
         return this.initialData;
     }
-    
+
     prefetchAdjacentPages(options: TableOptions): void {
         this.dataCache.prefetchAdjacentPages(options as FetchOptions);
     }
-    
+
     // Abstract methods that must be implemented by concrete providers
     abstract getRowData(response: TResponse): TData[];
     abstract getRowCount(response: TResponse): number;
@@ -206,15 +230,15 @@ export class ProductDataProvider extends BaseDataProvider<Product, ProductRespon
         );
         super(productCache, initialProductResponse);
     }
-    
+
     getRowData(response: ProductResponse): Product[] {
         return response.data;
     }
-    
+
     getRowCount(response: ProductResponse): number {
         return response.totalCount;
     }
-    
+
     getPageCount(response: ProductResponse): number {
         return response.pageCount;
     }
@@ -233,28 +257,28 @@ export class DataCache<T> {
     private endpoint: string;
     private baseUrl: string;
     private globalFilterField?: string;
-    
+
     constructor(baseUrl: string, endpoint: string, globalFilterField?: string) {
         this.baseUrl = baseUrl;
         this.endpoint = endpoint;
         this.globalFilterField = globalFilterField;
     }
-    
+
     // Generate a cache key from options
     getCacheKey(options: FetchOptions): string { ... }
-    
+
     // Fetch data with caching
     async fetchData(options: FetchOptions): Promise<T> { ... }
-    
+
     // Prefetch adjacent pages for smoother pagination
     prefetchAdjacentPages(options: FetchOptions): void { ... }
-    
+
     // Prefetch initial data
     prefetchInitialData(initialOptions: Partial<FetchOptions> = {}): Promise<T> { ... }
-    
+
     // Clear the entire cache
     clearCache(): void { ... }
-    
+
     // Remove a specific entry from the cache
     invalidateCache(options: FetchOptions): void { ... }
 }
@@ -310,19 +334,21 @@ Columns are defined using the `TableColumnDef` type, which extends the `ColumnDe
 ### TableColumnDef Type
 
 ```tsx
-export type TableColumnDef<TData, TValue> = ColumnDef<TData, TValue> & {
-    meta?: ColumnMeta<TData>;
+// Define a custom ColumnMeta type
+type WithColumnMeta<TData> = {
+    filterComponent?: (column: Column<TData, any>) => JSX.Element;
 };
 
-type ColumnMeta<TData> = {
-    filterComponent?: (column: Column<TData, any>) => JSX.Element;
+// Extend ColumnDef to include the custom meta type
+export type TableColumnDef<TData> = ColumnDef<TData> & {
+    meta?: WithColumnMeta<TData>;
 };
 ```
 
 ### Example Column Definition
 
 ```tsx
-const productColumns: TableColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product>[] = [
     {
         accessorKey: "name",
         header: "Product Name",
@@ -390,29 +416,63 @@ Global filtering is enabled by default and can be controlled using the `enableGl
 />
 ```
 
-The global filter input is rendered at the top of the table:
+The DataTableGlobalFilter component is automatically rendered when global filtering is enabled:
 
 ```tsx
-{features.enableGlobalFilter && (
-    <div style={{marginBottom: "1rem"}}>
-        <input
-            placeholder="Search..."
-            type="search"
-            value={options?.globalFilter || globalFilter}
-            onChange={(e) => {
-                const value = e.target.value;
-                handleGlobalFilterChange(value);
-            }}
-            style={{
-                padding: "0.5rem",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                width: "100%",
-                maxWidth: "300px",
-            }}
-        />
-    </div>
-)}
+// Inside DataTable component
+{
+    children ? children :
+        <>
+            {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
+            <DataTable.Header/>
+            <DataTable.Body/>
+            <DataTable.Footer/>
+            {table.options.manualPagination && <DataTablePagination/>}
+        </>
+}
+```
+
+You can also use the DataTable.GlobalFilter component directly in your custom layout:
+
+```tsx
+<DataTable<Product, ProductResponse>
+    columns={productColumns}
+    dataProvider={dataProvider}
+    features={features}
+>
+    <DataTable.GlobalFilter/>
+    <DataTable.Header/>
+    <DataTable.Body/>
+</DataTable>
+```
+
+The DataTableGlobalFilter component renders an input field for global filtering:
+
+```tsx
+export function DataTableGlobalFilter() {
+    const {table} = useDataTable();
+
+    return (
+        <div style={{marginBottom: "1rem"}}>
+            <input
+                placeholder="Search..."
+                type="search"
+                value={table.getState().globalFilter}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    table.options.onGlobalFilterChange?.(value);
+                }}
+                style={{
+                    padding: "0.5rem",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                    width: "100%",
+                    maxWidth: "300px",
+                }}
+            />
+        </div>
+    )
+}
 ```
 
 ### Column Filtering
@@ -529,34 +589,49 @@ Pagination is enabled by default and can be controlled using the `enablePaginati
 />
 ```
 
-The DataTablePagination component is used to render pagination controls:
+The DataTablePagination component is automatically rendered when pagination is enabled:
 
 ```tsx
-{features.enablePagination && (
-    <tr>
-        <td colSpan={columns.length}>
-            <DataTablePagination table={table}/>
-        </td>
-    </tr>
-)}
+// Inside DataTable component
+{
+    children ? children :
+        <>
+            {table.options.enableGlobalFilter && <DataTableGlobalFilter/>}
+            <DataTable.Header/>
+            <DataTable.Body/>
+            <DataTable.Footer/>
+            {table.options.manualPagination && <DataTablePagination/>}
+        </>
+}
+```
+
+You can also use the DataTable.Pagination component directly in your custom layout:
+
+```tsx
+<DataTable<Product, ProductResponse>
+    columns={productColumns}
+    dataProvider={dataProvider}
+    features={features}
+>
+    <DataTable.Header/>
+    <DataTable.Body/>
+    <DataTable.Pagination/>
+</DataTable>
 ```
 
 The DataTablePagination component provides the following controls:
 
 - First page button
 - Previous page button
-- Page information (current page, total pages, total items)
+- Page information (current page, total pages)
 - Next page button
 - Last page button
 
 ```tsx
-export function DataTablePagination<TData>({
-    table,
-}: {
-    table: Table<TData>;
-}) {
-    return (
-        <>
+export function DataTablePagination<TData>() {
+    const {table} = useDataTable<TData>();
+
+    return (<>
             <Button
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
@@ -570,8 +645,7 @@ export function DataTablePagination<TData>({
                 {"<"}
             </Button>
             <small>
-                page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.options.pageCount} pages, total items {table.options.rowCount}
+                page {table.getState().pagination.pageIndex + 1} of {table.options.pageCount}
             </small>
             <Button
                 onClick={() => table.nextPage()}
@@ -586,7 +660,7 @@ export function DataTablePagination<TData>({
                 {">>"}
             </Button>
         </>
-    );
+    )
 }
 ```
 
@@ -602,7 +676,7 @@ import { productColumns } from "./productColumns";
 export function ProductTable() {
     // Create a data provider
     const dataProvider = new ProductDataProvider('https://api.example.com');
-    
+
     return (
         <DataTable<Product, ProductResponse>
             columns={productColumns}
@@ -614,6 +688,48 @@ export function ProductTable() {
                 enableColumnFilters: true
             }}
         />
+    );
+}
+```
+
+### Using DataTable Parts
+
+The DataTable component provides several parts that can be used to customize the table layout:
+
+```tsx
+import { DataTable } from "@/components/data-table";
+import { ProductDataProvider } from "./ProductDataProvider";
+import { productColumns } from "./productColumns";
+
+export function CustomProductTable() {
+    // Create a data provider
+    const dataProvider = new ProductDataProvider('https://api.example.com');
+
+    return (
+        <DataTable<Product, ProductResponse>
+            columns={productColumns}
+            dataProvider={dataProvider}
+            features={{
+                enableSorting: true,
+                enablePagination: true,
+                enableGlobalFilter: true,
+                enableColumnFilters: true
+            }}
+        >
+            <DataTable.GlobalFilter />
+            <div className="custom-header-wrapper">
+                <DataTable.Header />
+            </div>
+            <div className="custom-body-wrapper">
+                <DataTable.Body />
+            </div>
+            <div className="custom-footer-wrapper">
+                <DataTable.Footer />
+            </div>
+            <div className="custom-pagination-wrapper">
+                <DataTable.Pagination />
+            </div>
+        </DataTable>
     );
 }
 ```
@@ -640,7 +756,6 @@ export const ProductTable = ({
         enablePagination?: boolean;
         enableGlobalFilter?: boolean;
         enableColumnFilters?: boolean;
-        initialPageSize?: number;
     };
     children?: React.ReactNode;
 }) => {
@@ -656,6 +771,47 @@ export const ProductTable = ({
             dataProvider={dataProvider}
             features={features}
         >
+            {children}
+        </DataTable>
+    );
+};
+```
+
+### Customizing the Table Layout
+
+You can customize which parts of the table are displayed and how they are arranged:
+
+```tsx
+export const UserTable = ({
+    options,
+    features,
+    children,
+}: {
+    options?: TableOptions;
+    features?: {
+        enableSorting?: boolean;
+        enablePagination?: boolean;
+        enableGlobalFilter?: boolean;
+        enableColumnFilters?: boolean;
+    };
+    children?: React.ReactNode;
+}) => {
+    // Create the data provider
+    const dataProvider = useMemo(() => {
+        return new UserDataProvider();
+    }, []);
+
+    return (
+        <DataTable<User, UserResponse>
+            columns={userColumns}
+            options={options}
+            dataProvider={dataProvider}
+            features={features}
+        >
+            { features?.enableGlobalFilter && <DataTable.GlobalFilter/> }
+            <DataTable.Header/>
+            <DataTable.Body/>
+            { features?.enablePagination && <DataTable.Pagination/> }
             {children}
         </DataTable>
     );
@@ -712,14 +868,18 @@ const columns = [
 
 ### Custom Table Actions
 
-You can add custom actions to the table using the `children` prop:
+You can add custom actions to the table using the `children` prop and DataTable Parts:
 
 ```tsx
 <ProductTable>
-    <div className="flex justify-end gap-2 p-4">
+    <div className="table-actions">
         <Button onClick={handleExport}>Export to CSV</Button>
         <Button onClick={handleRefresh}>Refresh Data</Button>
     </div>
+    <DataTable.GlobalFilter />
+    <DataTable.Header />
+    <DataTable.Body />
+    <DataTable.Pagination />
 </ProductTable>
 ```
 
@@ -874,7 +1034,7 @@ export interface ProductResponse {
 }
 
 // Define your column types
-const productColumns: TableColumnDef<Product, any>[] = [
+const productColumns: TableColumnDef<Product>[] = [
     // ...
 ];
 
