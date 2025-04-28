@@ -90,8 +90,8 @@ table, .table {
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		top: 0;
 		tr, .tr {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			/*display: grid;*/
+			/*grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
 			th, .th {
 				padding: 0 0.5rem;
 				border-bottom: 1px solid #ccc;
@@ -102,8 +102,8 @@ table, .table {
 
 	tbody, .tbody {
 		tr, .tr {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+			/*display: grid;*/
+			/*grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));*/
 			overflow: hidden;
 			td, .td {
 				padding: 0 0.5rem;

@@ -8,6 +8,7 @@ import type React from "react";
 import { type ChangeEvent, useMemo } from "react";
 import { UserDataProvider } from "./UserDataProvider.ts";
 import type {User, UserResponse} from "./types.ts";
+import {useDataTable} from "@/components/data-table/DataTable.tsx";
 
 
 
@@ -130,6 +131,17 @@ export const UserTable = ({
 		return new UserDataProvider();
 	}, []);
 
+	const TableRowContent = ({children}: {children: React.ReactNode}) => {
+		const {table} = useDataTable<User>();
+		return <tr>
+			<td colSpan={table.getVisibleFlatColumns().length}>
+				{children}
+
+			</td>
+
+		</tr>;
+	};
+
 	return (
 		<DataTable<User, UserResponse>
 			columns={personColumns}
@@ -137,11 +149,22 @@ export const UserTable = ({
 			dataProvider={dataProvider}
 			features={features}
 		>
+			<TableRowContent>
 			{ features?.enableGlobalFilter && <DataTable.GlobalFilter/>}
+
+			</TableRowContent>
 			<DataTable.Header/>
 			<DataTable.Body/>
-			{ features?.enablePagination && <DataTable.Pagination/> }
-			{children}
+			<TableRowContent>
+				{ features?.enablePagination && <DataTable.Pagination/> }
+			</TableRowContent>
+			<TableRowContent>
+				<div className="hbox">
+					{children}
+				</div>
+
+			</TableRowContent>
+
 		</DataTable>
 	);
 };

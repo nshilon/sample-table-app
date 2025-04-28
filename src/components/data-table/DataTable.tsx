@@ -81,7 +81,7 @@ export function DataTable<TData, TResponse>({
     const [isPending, startTransition] = useTransition();
 
 
-    const tableRef = useRef<HTMLDivElement>(null)
+    const tableRef = useRef<HTMLTableElement>(null)
 
     const size = useResize(tableRef);
 
@@ -243,7 +243,7 @@ export function DataTable<TData, TResponse>({
 
     return (
         <DataTableContext.Provider value={{table, isPending, size}}>
-            <div className="table" style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}} ref={tableRef}>
+            <table style={{opacity: isPending ? 0.7 : 1, transition: "opacity 0.2s"}} ref={tableRef}>
                 {
                     children ? children :
                         <>
@@ -251,22 +251,30 @@ export function DataTable<TData, TResponse>({
                             <DataTable.Header/>
                             <DataTable.Body/>
                             <DataTable.Footer/>
-                            {table.options.manualPagination && <DataTablePagination/>}
+                            <tfoot>
+                                <tr>
+                                    <td colSpan={table.getVisibleLeafColumns().length}>
+                                            {table.options.manualPagination && <DataTablePagination/>}
+
+                                    </td>
+                                </tr>
+                            </tfoot>
+
                         </>
 
                 }
-            </div>
+            </table>
         </DataTableContext.Provider>
     )
 }
 
 DataTable.Header = function <TData>() {
     const {table} = useDataTable();
-    return (<div className="thead">{
+    return (<thead>{
         table.getHeaderGroups().map((headerGroup) => (
-            <div key={headerGroup.id} className='tr'>
+            <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                    <div key={header.id} className="th">
+                    <th key={header.id}>
                         {header.isPlaceholder ? null : (
                             <div
                                 style={{
@@ -320,49 +328,51 @@ DataTable.Header = function <TData>() {
                                     ).meta?.filterComponent?.(header.column as Column<TData, any>)}
                             </div>
                         )}
-                    </div>
+                    </th>
                 ))}
-            </div>
+            </tr>
         ))}
-    </div>);
+    </thead>);
 }
 
 const padArray = (arr: any[], length: number, value: any) => {
-    if ( arr.length >= length ) return arr;
+    if (arr.length >= length) return arr;
     return arr.concat(Array(length - arr.length).fill(value));
 }
 
 DataTable.Body = function <TData>() {
     const {table} = useDataTable();
 
-    return (<div className="tbody">
-        {
-            padArray(table.getRowModel().rows, table.getState().pagination.pageSize, null).map((row, index) => (
-                row == null ? <div key={index} className="tr" ><div className="td" >&nbsp;</div></div> : (
-            <div key={row.id} className="tr">
-                {row.getVisibleCells().map((cell: Cell<TData, any>) => (
-                    <div key={cell.id} className="td" style={{
-                        width: cell.column.getSize(),
-                        minWidth: cell.column.getSize(),
-                        maxWidth: cell.column.getSize(),
-                        overflow: "hidden"
-                    }}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </div>
-                ))}
-            </div>
+    return (<tbody>
+    {
+        padArray(table.getRowModel().rows, table.getState().pagination.pageSize, null).map((row, index) => (
+            row == null ? <tr key={index}>
+                <td colSpan={table.getVisibleLeafColumns().length}>&nbsp;</td>
+            </tr> : (
+                <tr key={row.id}>
+                    {row.getVisibleCells().map((cell: Cell<TData, any>) => (
+                        <td key={cell.id} style={{
+                            width: cell.column.getSize(),
+                            minWidth: cell.column.getSize(),
+                            maxWidth: cell.column.getSize(),
+                            overflow: "hidden"
+                        }}>
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </td>
+                    ))}
+                </tr>
             )
         ))}
-    </div>);
+    </tbody>);
 }
 
 DataTable.Footer = function () {
     const {table} = useDataTable();
-    return (<div className="tfoot">{
+    return (<tfoot>{
         table.getFooterGroups().map((footerGroup) => (
-            <div key={footerGroup.id} className='tr'>
+            <tr key={footerGroup.id}>
                 {footerGroup.headers.map((header) => (
-                    <div key={header.id} className="th">
+                    <th key={header.id}>
                         {header.isPlaceholder ? null : (
                             flexRender(
                                 header.column.columnDef.footer,
@@ -370,11 +380,11 @@ DataTable.Footer = function () {
                             )
 
                         )}
-                    </div>
+                    </th>
                 ))}
-            </div>
+            </tr>
         ))}
-    </div>);
+    </tfoot>);
 }
 
 DataTable.GlobalFilter = DataTableGlobalFilter;
