@@ -1,4 +1,5 @@
 import {
+    Cell,
     type Column,
     type ColumnDef,
     type ColumnFiltersState,
@@ -326,13 +327,20 @@ DataTable.Header = function <TData>() {
     </div>);
 }
 
-DataTable.Body = function () {
+const padArray = (arr: any[], length: number, value: any) => {
+    if ( arr.length >= length ) return arr;
+    return arr.concat(Array(length - arr.length).fill(value));
+}
+
+DataTable.Body = function <TData>() {
     const {table} = useDataTable();
 
     return (<div className="tbody">
-        {table.getRowModel().rows.map((row) => (
+        {
+            padArray(table.getRowModel().rows, table.getState().pagination.pageSize, null).map((row, index) => (
+                row == null ? <div key={index} className="tr" ><div className="td" >&nbsp;</div></div> : (
             <div key={row.id} className="tr">
-                {row.getVisibleCells().map((cell) => (
+                {row.getVisibleCells().map((cell: Cell<TData, any>) => (
                     <div key={cell.id} className="td" style={{
                         width: cell.column.getSize(),
                         minWidth: cell.column.getSize(),
@@ -343,6 +351,7 @@ DataTable.Body = function () {
                     </div>
                 ))}
             </div>
+            )
         ))}
     </div>);
 }
